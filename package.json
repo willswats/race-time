@@ -10,6 +10,15 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-portsoc": "^1.0.1",
     "express": "^4.21.2"
+  },
+  "eslintConfig": {
+    "extends": "portsoc",
+    "root": true,
+    "env": {
+      "browser": true
+    }
   }
 }
