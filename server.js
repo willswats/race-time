@@ -1,11 +1,23 @@
 import Fastify from 'fastify';
+import fastifyStatic from '@fastify/static';
+
+import { fileURLToPath } from 'url';
+import path from 'node:path';
 
 const fastify = Fastify({
   logger: true,
 });
 
-fastify.get('/', (request, reply) => {
-  return { hello: 'world' };
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, 'public'),
+  prefix: '/public/',
+});
+
+fastify.get('/', function (req, reply) {
+  reply.sendFile('/html/home.html');
 });
 
 try {
