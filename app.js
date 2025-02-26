@@ -8,11 +8,7 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = 8080;
 
-app.use(express.static(join(__dirname, 'public')));
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+app.use('/', express.static(join(__dirname, 'public')));
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
