@@ -4,18 +4,25 @@ const buttonStopTimer = document.querySelector('#pause-timer');
 const buttonResetTimer = document.querySelector('#reset-timer');
 const buttonSubmitTime = document.querySelector('#submit-time');
 
+let hours = 0;
 let minutes = 0;
 let seconds = 0;
 let milliseconds = 0;
 let timerId;
 
+// TODO: pad with 0s
 const setTimerText = () => {
-  paragraphTimerText.textContent = `${minutes}:${seconds}:${milliseconds}`;
+  paragraphTimerText.textContent = `${hours}:${minutes}:${seconds}:${milliseconds}`;
 };
 
 const startTimer = () => {
   timerId = setInterval(() => {
     milliseconds += 10;
+
+    if (minutes === 60) {
+      minutes = 0;
+      hours += 1;
+    }
 
     if (seconds === 60) {
       seconds = 0;
@@ -36,6 +43,7 @@ const pauseTimer = () => {
 };
 
 const resetTimer = () => {
+  hours = 0;
   minutes = 0;
   seconds = 0;
   milliseconds = 0;
