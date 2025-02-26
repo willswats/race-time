@@ -1,3 +1,5 @@
+'use strict';
+
 const paragraphTimerText = document.querySelector('#timer-text');
 const buttonStartTimer = document.querySelector('#start-timer');
 const buttonStopTimer = document.querySelector('#pause-timer');
