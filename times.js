@@ -1,7 +1,16 @@
 import uuid from 'uuid-random';
 
-const times = [
-  { id: 'wefweeereehererhee', time: '00:00:00' },
-  { id: 'wefweeereerehkmjhe', time: '00:00:00' },
-  { id: 'regegewefweeereehe', time: '00:00:00' },
-];
+const times = [];
+
+export const getTimes = () => {
+  return times;
+};
+
+export const addTime = (time) => {
+  if (time.trim() === '') return times;
+
+  const newTime = { id: uuid, time: time.time };
+  times.push(newTime);
+
+  return times;
+};

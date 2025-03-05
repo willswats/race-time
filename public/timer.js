@@ -12,9 +12,11 @@ let seconds = 0;
 let milliseconds = 0;
 let timerId;
 
+const timeString = `${hours}:${minutes}:${seconds}:${milliseconds}`;
+
 // TODO: pad with 0s
 const setTimerText = () => {
-  paragraphTimerText.textContent = `${hours}:${minutes}:${seconds}:${milliseconds}`;
+  paragraphTimerText.textContent = timeString;
 };
 
 const startTimer = () => {
@@ -52,12 +54,27 @@ const resetTimer = () => {
   setTimerText();
 };
 
-const submitTime = () => {
+const submitTime = async () => {
   const confirm = window.confirm('Are you sure you want to submit your time?');
   if (confirm) {
-    // TODO: Add submit logic
     pauseTimer();
-    console.log('Submited!');
+
+    // TODO: fix error 500
+    const payload = { time: timeString };
+    console.log('Payload', payload);
+
+    const response = await fetch('times', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      const updatedMessages = await response.json();
+      console.log(updatedMessages);
+    } else {
+      console.log('failed to send message', response);
+    }
   }
 };
 
