@@ -12,10 +12,11 @@ let seconds = 0;
 let milliseconds = 0;
 let timerId;
 
-const timeString = `${hours}:${minutes}:${seconds}:${milliseconds}`;
+let timeString = '';
 
 // TODO: pad with 0s
 const setTimerText = () => {
+  timeString = `${hours}:${minutes}:${seconds}:${milliseconds}`;
   paragraphTimerText.textContent = timeString;
 };
 
