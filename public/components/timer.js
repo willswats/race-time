@@ -18,7 +18,6 @@ export class RaceTimer extends HTMLElement {
 
   connectedCallback() {
     const shadow = this.attachShadow({ mode: 'closed' });
-
     this.paragraphTimerText = document.createElement('p');
     this.paragraphTimerText.textContent = this.timeString;
 
@@ -34,17 +33,24 @@ export class RaceTimer extends HTMLElement {
     this.buttonSubmitTime = document.createElement('button');
     this.buttonSubmitTime.textContent = 'Submit';
 
-    this.buttonStartTimer.addEventListener('click', this.startTimer);
-    this.buttonStopTimer.addEventListener('click', this.pauseTimer);
-    this.buttonResetTimer.addEventListener('click', this.resetTimer);
-    this.buttonSubmitTime.addEventListener('click', this.submitTime);
+    this.buttonStartTimer.addEventListener('click', this.startTimer.bind(this));
+    this.buttonStopTimer.addEventListener('click', this.pauseTimer.bind(this));
+    this.buttonResetTimer.addEventListener('click', this.resetTimer.bind(this));
+    this.buttonSubmitTime.addEventListener('click', this.submitTime.bind(this));
+
+    this.intervalID = window.setInterval(this.update.bind(this), 1000);
 
     shadow.append(
       this.paragraphTimerText,
       this.buttonStartTimer,
+      this.buttonStopTimer,
       this.buttonResetTimer,
       this.buttonSubmitTime,
     );
+  }
+
+  disconnectedCallback() {
+    this.intervalID = window.clearInterval(this.intervalID);
   }
 
   updateTimeString() {
@@ -56,7 +62,13 @@ export class RaceTimer extends HTMLElement {
     this.paragraphTimerText.textContent = this.timeString;
   }
 
+  update() {
+    // TODO: use this to set the time on the ui
+    console.log('update!');
+  }
+
   startTimer() {
+    // TODO: make this set the date / work out the time that has passed since this was pressed
     this.timerId = setInterval(() => {
       this.milliseconds += 10;
 
