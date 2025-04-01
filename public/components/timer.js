@@ -110,9 +110,8 @@ export class RaceTimer extends HTMLElement {
     if (confirm) {
       this.pauseTimer();
 
-      // TODO: fix error 500
       const payload = { time: this.timeString };
-      console.log('Payload', payload);
+      console.log('Sending payload', payload);
 
       const response = await fetch('times', {
         method: 'POST',

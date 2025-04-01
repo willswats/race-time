@@ -17,7 +17,7 @@ function getMessages(req, res) {
 }
 
 function postMessage(req, res) {
-  const times = addTime(req.body.msg);
+  const times = addTime(req.body.time);
   res.json(times);
 }
 
