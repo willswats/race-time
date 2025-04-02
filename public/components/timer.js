@@ -2,24 +2,18 @@ export class RaceTimer extends HTMLElement {
   constructor() {
     super();
 
+    this.startDate = null;
+    this.timePassed = 0;
     this.hours = 0;
     this.minutes = 0;
     this.seconds = 0;
     this.milliseconds = 0;
-    this.timeString = '';
-    this.timerId = null;
-
-    this.paragraphTimerText = null;
-    this.buttonStartTimer = null;
-    this.buttonStopTimer = null;
-    this.buttonResetTimer = null;
-    this.buttonSubmitTime = null;
   }
 
   connectedCallback() {
     const shadow = this.attachShadow({ mode: 'closed' });
     this.paragraphTimerText = document.createElement('p');
-    this.paragraphTimerText.textContent = this.timeString;
+    this.paragraphTimerText.textContent = '00:00:00:00';
 
     this.buttonStartTimer = document.createElement('button');
     this.buttonStartTimer.textContent = 'Start';
@@ -34,11 +28,11 @@ export class RaceTimer extends HTMLElement {
     this.buttonSubmitTime.textContent = 'Submit';
 
     this.buttonStartTimer.addEventListener('click', this.startTimer.bind(this));
-    this.buttonStopTimer.addEventListener('click', this.pauseTimer.bind(this));
+    this.buttonStopTimer.addEventListener('click', this.stopTimer.bind(this));
     this.buttonResetTimer.addEventListener('click', this.resetTimer.bind(this));
     this.buttonSubmitTime.addEventListener('click', this.submitTime.bind(this));
 
-    this.intervalID = window.setInterval(this.update.bind(this), 1000);
+    this.intervalId = window.setInterval(this.update.bind(this), 1);
 
     shadow.append(
       this.paragraphTimerText,
@@ -50,57 +44,55 @@ export class RaceTimer extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.intervalID = window.clearInterval(this.intervalID);
+    this.intervalId = window.clearInterval(this.intervalId);
   }
 
-  updateTimeString() {
-    this.timeString = `${this.hours}:${this.minutes}:${this.seconds}:${this.milliseconds}`;
+  padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+  }
+
+  updateTime() {
+    this.milliseconds = this.timePassed % 1000;
+    this.seconds = Math.floor(this.timePassed / 1000);
+    this.minutes = Math.floor(this.seconds / 60);
+    this.hours = Math.floor(this.minutes / 60);
+
+    this.seconds = this.seconds % 60;
+    this.minutes = this.minutes % 60;
   }
 
   setTimerText() {
-    this.updateTimeString();
-    this.paragraphTimerText.textContent = this.timeString;
+    this.paragraphTimerText.textContent = `${this.padTo2Digits(this.hours)}:${this.padTo2Digits(this.minutes)}:${this.padTo2Digits(this.seconds)}:${this.padTo2Digits(this.milliseconds)}`;
   }
 
   update() {
-    // TODO: use this to set the time on the ui
-    console.log('update!');
+    this.setTimerText();
+
+    if (this.startDate) {
+      this.timePassed = Date.now() - this.startDate;
+      this.updateTime();
+    }
   }
 
   startTimer() {
-    // TODO: make this set the date / work out the time that has passed since this was pressed
-    this.timerId = setInterval(() => {
-      this.milliseconds += 10;
-
-      if (this.minutes === 60) {
-        this.minutes = 0;
-        this.hours += 1;
-      }
-
-      if (this.seconds === 60) {
-        this.seconds = 0;
-        this.minutes += 1;
-      }
-
-      if (this.milliseconds === 1000) {
-        this.milliseconds = 0;
-        this.seconds += 1;
-      }
-
-      this.setTimerText();
-    }, 10);
+    this.resetTimer();
+    this.startDate = Date.now();
   }
 
-  pauseTimer() {
-    clearInterval(this.timerId);
+  stopTimer() {
+    const confirm = window.confirm('Are you sure you want to stop your time?');
+    if (confirm) {
+      this.startDate = null;
+    }
   }
 
   resetTimer() {
-    this.hours = 0;
-    this.minutes = 0;
-    this.seconds = 0;
+    this.startDate = null;
+    this.timePassed = 0;
     this.milliseconds = 0;
-    this.setTimerText();
+    this.seconds = 0;
+    this.minutes = 0;
+    this.hours = 0;
   }
 
   async submitTime() {
@@ -108,10 +100,7 @@ export class RaceTimer extends HTMLElement {
       'Are you sure you want to submit your time?',
     );
     if (confirm) {
-      this.pauseTimer();
-
       const payload = { time: this.timeString };
-      console.log('Sending payload', payload);
 
       const response = await fetch('times', {
         method: 'POST',
