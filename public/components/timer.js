@@ -21,15 +21,11 @@ export class RaceTimer extends HTMLElement {
     this.buttonStopTimer = document.createElement('button');
     this.buttonStopTimer.textContent = 'Stop';
 
-    this.buttonResetTimer = document.createElement('button');
-    this.buttonResetTimer.textContent = 'Reset';
-
     this.buttonSubmitTime = document.createElement('button');
     this.buttonSubmitTime.textContent = 'Submit';
 
     this.buttonStartTimer.addEventListener('click', this.startTimer.bind(this));
     this.buttonStopTimer.addEventListener('click', this.stopTimer.bind(this));
-    this.buttonResetTimer.addEventListener('click', this.resetTimer.bind(this));
     this.buttonSubmitTime.addEventListener('click', this.submitTime.bind(this));
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);
@@ -38,7 +34,6 @@ export class RaceTimer extends HTMLElement {
       this.paragraphTimerText,
       this.buttonStartTimer,
       this.buttonStopTimer,
-      this.buttonResetTimer,
       this.buttonSubmitTime,
     );
   }
