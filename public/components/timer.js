@@ -8,12 +8,13 @@ export class RaceTimer extends HTMLElement {
     this.minutes = 0;
     this.seconds = 0;
     this.milliseconds = 0;
+    this.timeString = '00:00:00:00';
   }
 
   connectedCallback() {
     const shadow = this.attachShadow({ mode: 'closed' });
     this.paragraphTimerText = document.createElement('p');
-    this.paragraphTimerText.textContent = '00:00:00:00';
+    this.paragraphTimerText.textContent = this.timeString;
 
     this.buttonStartTimer = document.createElement('button');
     this.buttonStartTimer.textContent = 'Start';
@@ -46,7 +47,7 @@ export class RaceTimer extends HTMLElement {
     return num.toString().padStart(2, '0');
   }
 
-  updateTime() {
+  updateTimeString() {
     this.milliseconds = this.timePassed % 1000;
     this.seconds = Math.floor(this.timePassed / 1000);
     this.minutes = Math.floor(this.seconds / 60);
@@ -54,10 +55,12 @@ export class RaceTimer extends HTMLElement {
 
     this.seconds = this.seconds % 60;
     this.minutes = this.minutes % 60;
+
+    this.timeString = `${this.padTo2Digits(this.hours)}:${this.padTo2Digits(this.minutes)}:${this.padTo2Digits(this.seconds)}:${this.padTo2Digits(this.milliseconds)}`;
   }
 
   setTimerText() {
-    this.paragraphTimerText.textContent = `${this.padTo2Digits(this.hours)}:${this.padTo2Digits(this.minutes)}:${this.padTo2Digits(this.seconds)}:${this.padTo2Digits(this.milliseconds)}`;
+    this.paragraphTimerText.textContent = this.timeString;
   }
 
   update() {
@@ -65,7 +68,7 @@ export class RaceTimer extends HTMLElement {
 
     if (this.startDate) {
       this.timePassed = Date.now() - this.startDate;
-      this.updateTime();
+      this.updateTimeString();
     }
   }
 
