@@ -2,27 +2,22 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import { join, dirname } from 'path';
 
-import { getTimes, addTime } from './times.js';
+import { getAllResults, addResults } from './results.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const port = 8080;
+const port = 8081;
 
 app.use('/', express.static(join(__dirname, 'public')));
 
-function getMessages(req, res) {
-  res.json(getTimes());
-}
+app.get('/times', (req, res) => res.json(getAllResults()));
 
-function postMessage(req, res) {
-  const times = addTime(req.body.time);
-  res.json(times);
-}
-
-app.get('/times', getMessages);
-app.post('/times', express.json(), postMessage);
+app.post('/times', express.json(), (req, res) => {
+  const results = addResults(req.body.results);
+  res.json(results);
+});
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

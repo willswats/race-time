@@ -9,6 +9,8 @@ export class RaceTimer extends HTMLElement {
     this.seconds = 0;
     this.milliseconds = 0;
     this.timeString = '00:00:00:00';
+
+    this.results = [];
   }
 
   connectedCallback() {
@@ -73,8 +75,10 @@ export class RaceTimer extends HTMLElement {
   }
 
   startTimer() {
-    this.resetTimer();
     this.startDate = Date.now();
+    this.buttonStartTimer.textContent = 'Record';
+    this.results.push(this.timeString);
+    console.log(this.results);
   }
 
   stopTimer() {
@@ -97,8 +101,9 @@ export class RaceTimer extends HTMLElement {
     const confirm = window.confirm(
       'Are you sure you want to submit your time?',
     );
+
     if (confirm) {
-      const payload = { time: this.timeString };
+      const payload = { results: this.results };
 
       const response = await fetch('times', {
         method: 'POST',
