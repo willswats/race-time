@@ -21,13 +21,23 @@ export class RaceTimer extends HTMLElement {
     this.buttonStartTimer = document.createElement('button');
     this.buttonStartTimer.textContent = 'Start';
 
+    this.buttonRecordTimer = document.createElement('button');
+    this.buttonRecordTimer.textContent = 'Record';
+    this.buttonRecordTimer.hidden = true;
+
     this.buttonStopTimer = document.createElement('button');
     this.buttonStopTimer.textContent = 'Stop';
 
     this.buttonSubmitTime = document.createElement('button');
     this.buttonSubmitTime.textContent = 'Submit';
 
+    this.olResults = document.createElement('ol');
+
     this.buttonStartTimer.addEventListener('click', this.startTimer.bind(this));
+    this.buttonRecordTimer.addEventListener(
+      'click',
+      this.recordTimer.bind(this),
+    );
     this.buttonStopTimer.addEventListener('click', this.stopTimer.bind(this));
     this.buttonSubmitTime.addEventListener('click', this.submitTime.bind(this));
 
@@ -36,13 +46,24 @@ export class RaceTimer extends HTMLElement {
     shadow.append(
       this.paragraphTimerText,
       this.buttonStartTimer,
+      this.buttonRecordTimer,
       this.buttonStopTimer,
       this.buttonSubmitTime,
+      this.olResults,
     );
   }
 
   disconnectedCallback() {
     this.intervalId = window.clearInterval(this.intervalId);
+  }
+
+  update() {
+    this.setTimerText();
+
+    if (this.startDate) {
+      this.timePassed = Date.now() - this.startDate;
+      this.updateTimeString();
+    }
   }
 
   padTo2Digits(num) {
@@ -65,26 +86,26 @@ export class RaceTimer extends HTMLElement {
     this.paragraphTimerText.textContent = this.timeString;
   }
 
-  update() {
-    this.setTimerText();
-
-    if (this.startDate) {
-      this.timePassed = Date.now() - this.startDate;
-      this.updateTimeString();
-    }
-  }
-
   startTimer() {
     this.startDate = Date.now();
-    this.buttonStartTimer.textContent = 'Record';
+    this.buttonStartTimer.hidden = true;
+    this.buttonRecordTimer.hidden = false;
+  }
+
+  recordTimer() {
     this.results.push(this.timeString);
-    console.log(this.results);
+
+    const record = document.createElement('li');
+    record.textContent = this.timeString;
+    this.olResults.appendChild(record);
   }
 
   stopTimer() {
     const confirm = window.confirm('Are you sure you want to stop your time?');
     if (confirm) {
       this.startDate = null;
+      this.buttonStartTimer.hidden = false;
+      this.buttonRecordTimer.hidden = true;
     }
   }
 
@@ -105,7 +126,7 @@ export class RaceTimer extends HTMLElement {
     if (confirm) {
       const payload = { results: this.results };
 
-      const response = await fetch('times', {
+      const response = await fetch('results', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

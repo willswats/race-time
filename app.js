@@ -12,9 +12,9 @@ const port = 8081;
 
 app.use('/', express.static(join(__dirname, 'public')));
 
-app.get('/times', (req, res) => res.json(getAllResults()));
+app.get('/results', (req, res) => res.json(getAllResults()));
 
-app.post('/times', express.json(), (req, res) => {
+app.post('/results', express.json(), (req, res) => {
   const results = addResults(req.body.results);
   res.json(results);
 });
