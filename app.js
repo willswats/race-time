@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const port = 8081;
+const port = 8080;
 
 app.use('/', express.static(join(__dirname, 'public')));
 
