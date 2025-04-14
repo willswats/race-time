@@ -6,10 +6,10 @@ export const getAllRaceResults = () => {
   return allRaceResults;
 };
 
-export const addRaceResults = (results) => {
-  if (results.length === 0) return results;
+export const addRaceResults = (raceResults) => {
+  if (raceResults.length === 0) return raceResults;
 
-  const newRaceResults = { id: uuid(), results };
+  const newRaceResults = { id: uuid(), results: raceResults };
   allRaceResults.push(newRaceResults);
 
   return allRaceResults;

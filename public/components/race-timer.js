@@ -10,7 +10,7 @@ export class RaceTimer extends HTMLElement {
     this.milliseconds = 0;
     this.timeString = '00:00:00:00';
 
-    this.results = [];
+    this.raceResults = [];
   }
 
   connectedCallback() {
@@ -101,7 +101,7 @@ export class RaceTimer extends HTMLElement {
   }
 
   recordTimer() {
-    this.results.push(this.timeString);
+    this.raceResults.push(this.timeString);
 
     const record = document.createElement('li');
     record.textContent = this.timeString;
@@ -122,7 +122,7 @@ export class RaceTimer extends HTMLElement {
       'Are you sure you want to clear your race results?',
     );
     if (confirm) {
-      this.results = [];
+      this.raceResults = [];
       this.olRaceResults.replaceChildren();
     }
   }
@@ -142,7 +142,7 @@ export class RaceTimer extends HTMLElement {
     );
 
     if (confirm) {
-      const payload = { results: this.results };
+      const payload = { raceResults: this.raceResults };
 
       const response = await fetch('/api/v1/race-results', {
         method: 'POST',
