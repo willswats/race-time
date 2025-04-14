@@ -1,14 +1,24 @@
 export class RaceResults extends HTMLElement {
-  connectedCallback() {
+  async connectedCallback() {
     const shadow = this.attachShadow({ mode: 'closed' });
 
-    this.olResults = document.createElement('ol');
+    const allRaceResults = await this.getAllRaceResults();
 
-    this.getAllRaceResults();
+    for (const race of allRaceResults) {
+      const raceH1 = document.createElement('h1');
+      raceH1.textContent = race.id;
+
+      const raceOl = document.createElement('ol');
+      for (const result of race.results) {
+        const resultLi = document.createElement('li');
+        resultLi.textContent = result;
+        raceOl.appendChild(resultLi);
+      }
+
+      shadow.append(raceH1, raceOl);
+    }
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);
-
-    shadow.append(this.olResults);
   }
 
   disconnectedCallback() {
@@ -22,7 +32,7 @@ export class RaceResults extends HTMLElement {
 
     if (response.ok) {
       const allRaceResults = await response.json();
-      console.log(allRaceResults);
+      return allRaceResults;
     } else {
       console.log('failed to send message', response);
     }
