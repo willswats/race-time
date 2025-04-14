@@ -24,7 +24,7 @@ export class RaceResults extends HTMLElement {
   update() {}
 
   async getAllRaceResults() {
-    const response = await fetch('/api/v1/results');
+    const response = await fetch('/api/v1/race-results');
 
     if (response.ok) {
       const results = await response.json();

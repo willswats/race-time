@@ -34,7 +34,7 @@ export class RaceTimer extends HTMLElement {
     this.buttonSubmitTime = document.createElement('button');
     this.buttonSubmitTime.textContent = 'Submit';
 
-    this.olResults = document.createElement('ol');
+    this.olRaceResults = document.createElement('ol');
 
     this.buttonStartTimer.addEventListener('click', this.startTimer.bind(this));
     this.buttonRecordTimer.addEventListener(
@@ -42,7 +42,10 @@ export class RaceTimer extends HTMLElement {
       this.recordTimer.bind(this),
     );
     this.buttonStopTimer.addEventListener('click', this.stopTimer.bind(this));
-    this.buttonClearTimer.addEventListener('click', this.clearTimer.bind(this));
+    this.buttonClearTimer.addEventListener(
+      'click',
+      this.clearRaceResults.bind(this),
+    );
     this.buttonSubmitTime.addEventListener('click', this.submitTime.bind(this));
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);
@@ -54,7 +57,7 @@ export class RaceTimer extends HTMLElement {
       this.buttonStopTimer,
       this.buttonClearTimer,
       this.buttonSubmitTime,
-      this.olResults,
+      this.olRaceResults,
     );
   }
 
@@ -102,7 +105,7 @@ export class RaceTimer extends HTMLElement {
 
     const record = document.createElement('li');
     record.textContent = this.timeString;
-    this.olResults.appendChild(record);
+    this.olRaceResults.appendChild(record);
   }
 
   stopTimer() {
@@ -114,13 +117,13 @@ export class RaceTimer extends HTMLElement {
     }
   }
 
-  clearTimer() {
+  clearRaceResults() {
     const confirm = window.confirm(
       'Are you sure you want to clear your race results?',
     );
     if (confirm) {
       this.results = [];
-      this.olResults.replaceChildren();
+      this.olRaceResults.replaceChildren();
     }
   }
 
@@ -141,15 +144,15 @@ export class RaceTimer extends HTMLElement {
     if (confirm) {
       const payload = { results: this.results };
 
-      const response = await fetch('/api/v1/results', {
+      const response = await fetch('/api/v1/race-results', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        const updatedMessages = await response.json();
-        console.log(updatedMessages);
+        const updatedRaceResults = await response.json();
+        console.log(updatedRaceResults);
       } else {
         console.log('failed to send message', response);
       }
