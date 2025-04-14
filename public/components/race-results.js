@@ -6,7 +6,7 @@ export class RaceResults extends HTMLElement {
 
     for (const race of allRaceResults) {
       const raceH1 = document.createElement('h1');
-      raceH1.textContent = race.id;
+      raceH1.textContent = race.date;
 
       const raceOl = document.createElement('ol');
       for (const result of race.results) {
