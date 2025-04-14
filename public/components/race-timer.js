@@ -141,7 +141,7 @@ export class RaceTimer extends HTMLElement {
     if (confirm) {
       const payload = { results: this.results };
 
-      const response = await fetch('/results', {
+      const response = await fetch('/api/v1/results', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

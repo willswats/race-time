@@ -1,4 +1,4 @@
-export class ListResults extends HTMLElement {
+export class RaceResults extends HTMLElement {
   constructor() {
     super();
 
@@ -24,7 +24,7 @@ export class ListResults extends HTMLElement {
   update() {}
 
   async getAllRaceResults() {
-    const response = await fetch('/results');
+    const response = await fetch('/api/v1/results');
 
     if (response.ok) {
       const results = await response.json();
@@ -35,4 +35,4 @@ export class ListResults extends HTMLElement {
   }
 }
 
-customElements.define('list-results', ListResults);
+customElements.define('race-results', RaceResults);
