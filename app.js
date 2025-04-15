@@ -23,5 +23,5 @@ app.post('/api/v1/race-results', express.json(), (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+  console.log(`App listening on http://localhost:${port}`);
 });
