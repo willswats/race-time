@@ -16,20 +16,40 @@ const dbConn = init();
 
 export const getAllRaceResults = async () => {
   const db = await dbConn;
-  return db.all('SELECT * FROM race_result ORDER BY race_result_time');
+  return db.all(
+    `
+    SELECT 
+      race_results.race_results_id AS raceResultsId,
+      race_results.race_results_time AS raceResultsTime,
+      json_group_array (race_result.race_result) AS raceResults 
+    FROM race_results 
+      INNER JOIN race_result ON race_results.race_result_id = race_result.race_result_id
+    GROUP BY
+      race_results.race_results_time
+    ORDER BY
+      race_results.race_results_time desc;
+    `,
+  );
 };
 
 export const addRaceResults = async (raceResults) => {
   if (raceResults.length === 0) return raceResults;
 
   const db = await dbConn;
-  const currentTime = new Date().toISOString();
+  const raceResultsTime = new Date().toISOString();
+
   for (const raceResult of raceResults) {
-    const id = uuid();
-    await db.run('INSERT INTO race_result VALUES (?, ?, ?)', [
-      id,
-      currentTime,
+    const raceResultId = uuid();
+    await db.run('INSERT INTO race_result VALUES (?, ?)', [
+      raceResultId,
       raceResult,
+    ]);
+
+    const raceResultsId = uuid();
+    await db.run('INSERT INTO race_results VALUES (?, ?, ?)', [
+      raceResultsId,
+      raceResultsTime,
+      raceResultId,
     ]);
   }
 
