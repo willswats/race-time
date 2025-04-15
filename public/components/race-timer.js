@@ -36,17 +36,26 @@ export class RaceTimer extends HTMLElement {
 
     this.olRaceResults = document.createElement('ol');
 
-    this.buttonStartTimer.addEventListener('click', this.startTimer.bind(this));
+    this.buttonStartTimer.addEventListener(
+      'click',
+      this.startTimerButton.bind(this),
+    );
     this.buttonRecordTimer.addEventListener(
       'click',
-      this.recordTimer.bind(this),
+      this.recordTimerButton.bind(this),
     );
-    this.buttonStopTimer.addEventListener('click', this.stopTimer.bind(this));
+    this.buttonStopTimer.addEventListener(
+      'click',
+      this.stopTimerButton.bind(this),
+    );
     this.buttonClearTimer.addEventListener(
       'click',
-      this.clearRaceResults.bind(this),
+      this.clearRaceResultsButton.bind(this),
     );
-    this.buttonSubmitTime.addEventListener('click', this.submitTime.bind(this));
+    this.buttonSubmitTime.addEventListener(
+      'click',
+      this.submitTimeButton.bind(this),
+    );
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);
 
@@ -100,7 +109,21 @@ export class RaceTimer extends HTMLElement {
     this.buttonRecordTimer.hidden = false;
   }
 
-  recordTimer() {
+  startTimerButton() {
+    if (this.raceResults.length > 0) {
+      const confirm = window.confirm(
+        'Are you sure you want to start a new timer? This will clear your previous results',
+      );
+      if (confirm) {
+        this.clearRaceResults();
+        this.startTimer();
+      }
+      return;
+    }
+    this.startTimer();
+  }
+
+  recordTimerButton() {
     this.raceResults.push(this.timeString);
 
     const record = document.createElement('li');
@@ -109,21 +132,30 @@ export class RaceTimer extends HTMLElement {
   }
 
   stopTimer() {
+    this.startDate = null;
+    this.buttonStartTimer.hidden = false;
+    this.buttonRecordTimer.hidden = true;
+  }
+
+  stopTimerButton() {
     const confirm = window.confirm('Are you sure you want to stop your time?');
     if (confirm) {
-      this.startDate = null;
-      this.buttonStartTimer.hidden = false;
-      this.buttonRecordTimer.hidden = true;
+      this.stopTimer();
     }
   }
 
   clearRaceResults() {
+    this.raceResults = [];
+    this.olRaceResults.replaceChildren();
+  }
+
+  clearRaceResultsButton() {
     const confirm = window.confirm(
       'Are you sure you want to clear your race results?',
     );
     if (confirm) {
-      this.raceResults = [];
-      this.olRaceResults.replaceChildren();
+      this.clearRaceResults();
+      this.stopTimer();
     }
   }
 
@@ -137,25 +169,30 @@ export class RaceTimer extends HTMLElement {
   }
 
   async submitTime() {
+    const payload = { raceResults: this.raceResults };
+
+    const response = await fetch('/api/v1/race-results', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      const updatedRaceResults = await response.json();
+      console.log(updatedRaceResults);
+    } else {
+      console.log('failed to send message', response);
+    }
+  }
+
+  submitTimeButton() {
     const confirm = window.confirm(
-      'Are you sure you want to submit your time?',
+      'Are you sure you want to submit your results?',
     );
 
     if (confirm) {
-      const payload = { raceResults: this.raceResults };
-
-      const response = await fetch('/api/v1/race-results', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        const updatedRaceResults = await response.json();
-        console.log(updatedRaceResults);
-      } else {
-        console.log('failed to send message', response);
-      }
+      this.submitTime();
+      this.stopTimer();
     }
   }
 }
