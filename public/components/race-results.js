@@ -6,14 +6,12 @@ export class RaceResults extends HTMLElement {
 
     for (const race of allRaceResults) {
       const raceH1 = document.createElement('h1');
-      raceH1.textContent = race.date;
+      raceH1.textContent = race.race_result_time;
 
       const raceOl = document.createElement('ol');
-      for (const result of race.results) {
-        const resultLi = document.createElement('li');
-        resultLi.textContent = result;
-        raceOl.appendChild(resultLi);
-      }
+      const resultLi = document.createElement('li');
+      resultLi.textContent = race.race_result;
+      raceOl.appendChild(resultLi);
 
       shadow.append(raceH1, raceOl);
     }

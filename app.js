@@ -12,13 +12,13 @@ const port = 8080;
 
 app.use('/', express.static(join(__dirname, 'public')));
 
-app.get('/api/v1/race-results', (_, res) => {
-  const allRaceResults = getAllRaceResults();
+app.get('/api/v1/race-results', async (_, res) => {
+  const allRaceResults = await getAllRaceResults();
   res.json(allRaceResults);
 });
 
-app.post('/api/v1/race-results', express.json(), (req, res) => {
-  const newRaceResults = addRaceResults(req.body.raceResults);
+app.post('/api/v1/race-results', express.json(), async (req, res) => {
+  const newRaceResults = await addRaceResults(req.body.raceResults);
   res.json(newRaceResults);
 });
 
