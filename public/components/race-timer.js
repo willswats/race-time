@@ -15,6 +15,12 @@ export class RaceTimer extends HTMLElement {
 
   connectedCallback() {
     const shadow = this.attachShadow({ mode: 'closed' });
+
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', import.meta.resolve('./race-timer.css'));
+
     this.paragraphTimerText = document.createElement('p');
     this.paragraphTimerText.textContent = this.timeString;
 
@@ -60,6 +66,7 @@ export class RaceTimer extends HTMLElement {
     this.intervalId = window.setInterval(this.update.bind(this), 1);
 
     shadow.append(
+      link,
       this.paragraphTimerText,
       this.buttonStartTimer,
       this.buttonRecordTimer,

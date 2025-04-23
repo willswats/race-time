@@ -1,0 +1,13 @@
+p {
+  color: #fff;
+}
+
+ol {
+  color: #fff;
+}
+
+button {
+  background-color: red;
+  border-color: red;
+  border-radius: 5px;
+}

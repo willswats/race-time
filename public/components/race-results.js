@@ -1,6 +1,10 @@
 export class RaceResults extends HTMLElement {
   async connectedCallback() {
     const shadow = this.attachShadow({ mode: 'closed' });
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', import.meta.resolve('./race-results.css'));
 
     const allRaceResults = await this.getAllRaceResults();
 
@@ -16,7 +20,7 @@ export class RaceResults extends HTMLElement {
         raceOl.appendChild(resultLi);
       }
 
-      shadow.append(raceH1, raceOl);
+      shadow.append(link, raceH1, raceOl);
     }
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);

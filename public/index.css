@@ -1,0 +1,9 @@
+body {
+  background-color: #1a1a1a;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
