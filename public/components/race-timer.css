@@ -1,12 +1,14 @@
+@import '../globals.css';
+
 #timer {
   display: flex;
   flex-direction: column;
   background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 40px;
-  width: 42rem;
+  border-radius: 2rem;
+  width: 48rem;
   height: 28rem;
   padding: 2rem;
-  transition: 1s;
+  margin-bottom: 2rem;
 }
 
 #timer-time {
@@ -15,12 +17,14 @@
   align-items: center;
   flex-grow: 1;
   margin: 0;
-  font-size: 6rem;
 }
 
 #timer-time p {
+  width: 100%;
+  text-align: center;
+  font-size: 6rem;
   background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 40px;
+  border-radius: 2rem;
   padding: 1rem;
   margin: 0;
 }
@@ -30,16 +34,13 @@
 }
 
 #timer-buttons button {
-  color: #fff;
   background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
   padding: 0.5rem 1rem;
   font-size: 1.2rem;
   transition: background-color 0.1s;
-  border: none;
-  cursor: pointer;
   width: 100%;
-  border-radius: 40px;
+  border-radius: 2rem;
 }
 
 #timer-buttons button:hover {
@@ -47,21 +48,31 @@
 }
 
 ol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   font-size: 1.2rem;
-  color: #fff;
   background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 40px;
-  padding: 3rem;
+  border-radius: 2rem;
+  width: 48rem;
+  padding: 2rem;
 }
 
-@media screen and (max-width: 768px) {
+/* Make hidden work with flexbox https://stackoverflow.com/questions/23772673/hidden-property-does-not-work-with-flex-box */
+[hidden] {
+  display: none !important;
+}
+
+@media screen and (max-width: 800px) {
   #timer {
     width: 100%;
     height: 100%;
+    padding: 0;
     background-color: transparent;
   }
 
-  #timer-time {
+  #timer-time p {
     font-size: 3rem;
     margin-bottom: 1rem;
   }
@@ -72,9 +83,6 @@ ol {
 
   ol {
     font-size: 1rem;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 40px;
-    padding: 2rem;
+    width: 100%;
   }
 }
