@@ -41,6 +41,7 @@ export class RaceTimer extends HTMLElement {
     this.buttonSubmitTime.textContent = 'Submit';
 
     this.olRaceResults = document.createElement('ol');
+    this.olRaceResults.hidden = true;
 
     this.buttonStartTimer.addEventListener(
       'click',
@@ -145,6 +146,7 @@ export class RaceTimer extends HTMLElement {
     const record = document.createElement('li');
     record.textContent = this.timeString;
     this.olRaceResults.appendChild(record);
+    this.olRaceResults.hidden = false;
   }
 
   stopTimer() {
@@ -163,6 +165,7 @@ export class RaceTimer extends HTMLElement {
   clearRaceResults() {
     this.raceResults = [];
     this.olRaceResults.replaceChildren();
+    this.olRaceResults.hidden = true;
   }
 
   clearRaceResultsButton() {
