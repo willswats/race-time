@@ -1,13 +1,55 @@
-p {
+#timer {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 40px;
+  width: 42rem;
+  height: 28rem;
+  padding: 2rem;
+  transition: 1s;
+}
+
+#timer-time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  margin: 0;
+  font-size: 6rem;
+}
+
+#timer-time p {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 40px;
+  padding: 1rem;
+  margin: 0;
+}
+
+#timer-buttons {
+  display: flex;
+}
+
+#timer-buttons button {
   color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  transition: background-color 0.1s;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 40px;
+}
+
+#timer-buttons button:hover {
+  background-color: rgba(0, 0, 0, 0.75);
 }
 
 ol {
+  font-size: 1.2rem;
   color: #fff;
-}
-
-button {
-  background-color: red;
-  border-color: red;
-  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 40px;
+  padding: 3rem;
 }

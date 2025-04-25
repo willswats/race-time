@@ -63,18 +63,27 @@ export class RaceTimer extends HTMLElement {
       this.submitTimeButton.bind(this),
     );
 
-    this.intervalId = window.setInterval(this.update.bind(this), 1);
+    this.sectionTimerTime = document.createElement('section');
+    this.sectionTimerTime.id = 'timer-time';
+    this.sectionTimerTime.append(this.paragraphTimerText);
 
-    shadow.append(
-      link,
-      this.paragraphTimerText,
+    this.sectionTimerButtons = document.createElement('section');
+    this.sectionTimerButtons.id = 'timer-buttons';
+    this.sectionTimerButtons.append(
       this.buttonStartTimer,
       this.buttonRecordTimer,
       this.buttonStopTimer,
       this.buttonClearTimer,
       this.buttonSubmitTime,
-      this.olRaceResults,
     );
+
+    this.sectionTimer = document.createElement('section');
+    this.sectionTimer.id = 'timer';
+    this.sectionTimer.append(this.sectionTimerTime, this.sectionTimerButtons);
+
+    shadow.append(link, this.sectionTimer, this.olRaceResults);
+
+    this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
 
   disconnectedCallback() {

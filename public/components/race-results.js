@@ -20,7 +20,10 @@ export class RaceResults extends HTMLElement {
         raceOl.appendChild(resultLi);
       }
 
-      shadow.append(link, raceH1, raceOl);
+      const raceSection = document.createElement('section');
+      raceSection.append(raceH1, raceOl);
+
+      shadow.append(link, raceSection);
     }
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);
