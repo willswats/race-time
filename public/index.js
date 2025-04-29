@@ -30,10 +30,6 @@ function buildScreens() {
     // Not intuitive, but there you go
     const section = template.content.cloneNode(true).firstElementChild;
 
-    // set the title of the section, with the first letter capitalised
-    const title = section.querySelector('.title');
-    title.textContent = page.title;
-
     section.dataset.id = `sect-${page.screen}`;
     section.dataset.name = page.screen;
 
