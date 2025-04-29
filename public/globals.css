@@ -1,3 +1,8 @@
+:root {
+  --text-color: #fff;
+  --bg-color: #4b99d2;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,12 +15,12 @@ a {
 }
 
 body {
-  color: #fff;
-  background-color: #9c6910;
+  color: var(--text-color);
+  background-color: var(--bg-color);
 }
 
 button {
-  color: #fff;
+  color: var(--text-color);
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -27,7 +32,7 @@ input {
 }
 
 svg path {
-  fill: #fff;
+  fill: var(--text-color);
 }
 
 input[type='number'] {
@@ -53,12 +58,12 @@ input[type='range']::-webkit-slider-thumb {
   cursor: pointer;
   appearance: none;
   /* Remove WebKit default browser style */
-  background-color: #fff;
+  background-color: var(--text-color);
 }
 
 input[type='range']::-moz-range-thumb {
   cursor: pointer;
   border: none;
   /* Remove Firefox default browser style */
-  background-color: #fff;
+  background-color: var(--text-color);
 }
