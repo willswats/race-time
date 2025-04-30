@@ -115,7 +115,7 @@ function showScreen(name) {
 }
 
 function storeState() {
-  history.pushState(ui.current, ui.current, `/${ui.current}`);
+  history.pushState(ui.current, ui.current, `/app/${ui.current}`);
 }
 
 function readPath() {
