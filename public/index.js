@@ -50,7 +50,10 @@ function setupNav() {
     button.dataset.screen = page.screen;
     button.addEventListener('click', show);
     button.addEventListener('click', storeState);
-    button.addEventListener('click', refreshRaceResults);
+
+    if (button.textContent === 'Race Results') {
+      button.addEventListener('click', refreshRaceResults);
+    }
 
     ui.mainnav.append(button);
     ui.buttons[page.screen] = button;
