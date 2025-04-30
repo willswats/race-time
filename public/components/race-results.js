@@ -1,11 +1,30 @@
 export class RaceResults extends HTMLElement {
+  constructor() {
+    super();
+    this.raceSections = [];
+  }
+
   async connectedCallback() {
-    const shadow = this.attachShadow({ mode: 'closed' });
+    this.shadow = this.attachShadow({ mode: 'closed' });
+
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
     link.setAttribute('href', import.meta.resolve('./race-results.css'));
+    this.shadow.append(link);
 
+    await this.addRaceSections();
+
+    this.intervalId = window.setInterval(this.update.bind(this), 1);
+  }
+
+  disconnectedCallback() {
+    this.intervalId = window.clearInterval(this.intervalId);
+  }
+
+  update() {}
+
+  async addRaceSections() {
     const allRaceResults = await this.getAllRaceResults();
 
     for (const race of allRaceResults) {
@@ -22,18 +41,17 @@ export class RaceResults extends HTMLElement {
 
       const raceSection = document.createElement('section');
       raceSection.append(raceH1, raceOl);
+      this.raceSections.push(raceSection);
 
-      shadow.append(link, raceSection);
+      this.shadow.append(raceSection);
     }
-
-    this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
 
-  disconnectedCallback() {
-    this.intervalId = window.clearInterval(this.intervalId);
+  removeRaceSections() {
+    for (const raceSection of this.raceSections) {
+      raceSection.remove();
+    }
   }
-
-  update() {}
 
   async getAllRaceResults() {
     const response = await fetch('/api/v1/race-results');
