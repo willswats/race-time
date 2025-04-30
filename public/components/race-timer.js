@@ -37,9 +37,6 @@ export class RaceTimer extends HTMLElement {
     this.buttonSubmitTime = document.createElement('button');
     this.buttonSubmitTime.textContent = 'Submit';
 
-    this.olRaceResults = document.createElement('ol');
-    this.olRaceResults.hidden = true;
-
     this.buttonStartTimer.addEventListener(
       'click',
       this.startTimerButton.bind(this),
@@ -67,14 +64,20 @@ export class RaceTimer extends HTMLElement {
       this.buttonStartTimer,
       this.buttonRecordTimer,
       this.buttonStopTimer,
-      this.buttonSubmitTime,
     );
 
     this.sectionTimer = document.createElement('section');
     this.sectionTimer.id = 'timer';
     this.sectionTimer.append(this.sectionTimerTime, this.sectionTimerButtons);
 
-    shadow.append(link, this.sectionTimer, this.olRaceResults);
+    this.olRaceResults = document.createElement('ol');
+
+    this.sectionRaceResults = document.createElement('section');
+    this.sectionRaceResults.hidden = true;
+    this.sectionRaceResults.id = 'timer-results';
+    this.sectionRaceResults.append(this.buttonSubmitTime, this.olRaceResults);
+
+    shadow.append(link, this.sectionTimer, this.sectionRaceResults);
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
@@ -138,7 +141,7 @@ export class RaceTimer extends HTMLElement {
     const record = document.createElement('li');
     record.textContent = this.timeString;
     this.olRaceResults.appendChild(record);
-    this.olRaceResults.hidden = false;
+    this.sectionRaceResults.hidden = false;
   }
 
   stopTimer() {
@@ -157,7 +160,7 @@ export class RaceTimer extends HTMLElement {
   clearRaceResults() {
     this.raceResults = [];
     this.olRaceResults.replaceChildren();
-    this.olRaceResults.hidden = true;
+    this.sectionRaceResults.hidden = true;
   }
 
   resetTimer() {
