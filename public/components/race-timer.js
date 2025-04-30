@@ -34,9 +34,6 @@ export class RaceTimer extends HTMLElement {
     this.buttonStopTimer = document.createElement('button');
     this.buttonStopTimer.textContent = 'Stop';
 
-    this.buttonClearTimer = document.createElement('button');
-    this.buttonClearTimer.textContent = 'Clear';
-
     this.buttonSubmitTime = document.createElement('button');
     this.buttonSubmitTime.textContent = 'Submit';
 
@@ -55,10 +52,6 @@ export class RaceTimer extends HTMLElement {
       'click',
       this.stopTimerButton.bind(this),
     );
-    this.buttonClearTimer.addEventListener(
-      'click',
-      this.clearRaceResultsButton.bind(this),
-    );
     this.buttonSubmitTime.addEventListener(
       'click',
       this.submitTimeButton.bind(this),
@@ -74,7 +67,6 @@ export class RaceTimer extends HTMLElement {
       this.buttonStartTimer,
       this.buttonRecordTimer,
       this.buttonStopTimer,
-      this.buttonClearTimer,
       this.buttonSubmitTime,
     );
 
@@ -166,16 +158,6 @@ export class RaceTimer extends HTMLElement {
     this.raceResults = [];
     this.olRaceResults.replaceChildren();
     this.olRaceResults.hidden = true;
-  }
-
-  clearRaceResultsButton() {
-    const confirm = window.confirm(
-      'Are you sure you want to clear your race results?',
-    );
-    if (confirm) {
-      this.clearRaceResults();
-      this.stopTimer();
-    }
   }
 
   resetTimer() {
