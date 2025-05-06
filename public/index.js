@@ -7,6 +7,10 @@ const pages = [
     screen: 'race-results',
     title: 'Race Results',
   },
+  {
+    screen: 'race-result',
+    title: 'Race Result',
+  },
 ];
 
 const ui = {};
@@ -42,7 +46,7 @@ function buildScreens() {
 function setupNav() {
   ui.buttons = {};
   for (const page of pages) {
-    if (page.screen === 'error') {
+    if (page.screen === 'error' || page.screen === 'race-result') {
       continue;
     }
     const button = document.createElement('button');
@@ -93,9 +97,10 @@ function enableAllButtons() {
   }
 }
 
-function show(event) {
+export function show(event) {
   // ui.previous is used after one of the buttons on the login screen
   // is pressed to return the user to where they were.
+  console.log(event);
   ui.previous = ui.current;
   const screen = event?.target?.dataset?.screen ?? 'home';
   showScreen(screen);
@@ -117,7 +122,7 @@ function showScreen(name) {
   }
 }
 
-function storeState() {
+export function storeState() {
   history.pushState(ui.current, ui.current, `/app/${ui.current}`);
 }
 

@@ -8,7 +8,9 @@ CREATE TABLE race_results (
 
 CREATE TABLE race_result (
     race_result_id CHAR(36),
-    race_result TEXT NOT NULL
+    race_result TEXT NOT NULL,
+    race_result_first_name TEXT,
+    race_result_last_name TEXT
 );
 
 -- Down

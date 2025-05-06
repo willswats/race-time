@@ -1,3 +1,5 @@
+import { show, storeState } from '../index.js';
+
 export class RaceResults extends HTMLElement {
   constructor() {
     super();
@@ -33,10 +35,19 @@ export class RaceResults extends HTMLElement {
       const raceOl = document.createElement('ol');
 
       const raceResults = JSON.parse(race.raceResults);
-      for (const raceResult of raceResults) {
+      const raceResultsId = JSON.parse(race.raceResultsId);
+      for (let i = 0; i < raceResults.length; i++) {
         const resultLi = document.createElement('li');
-        resultLi.textContent = raceResult;
-        raceOl.appendChild(resultLi);
+        resultLi.textContent = raceResults[i];
+
+        const resultButton = document.createElement('button');
+        resultButton.id = raceResultsId[i];
+        resultButton.dataset.screen = 'race-result';
+        resultButton.addEventListener('click', show);
+        resultButton.addEventListener('click', storeState);
+        resultButton.appendChild(resultLi);
+
+        raceOl.appendChild(resultButton);
       }
 
       const raceSection = document.createElement('section');
