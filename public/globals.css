@@ -19,6 +19,10 @@ body {
   background-color: var(--bg-color);
 }
 
+ol {
+  list-style: inside decimal;
+}
+
 button {
   color: var(--text-color);
   border: none;

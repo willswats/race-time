@@ -71,11 +71,12 @@ export class RaceTimer extends HTMLElement {
     this.sectionTimer.append(this.sectionTimerTime, this.sectionTimerButtons);
 
     this.olRaceResults = document.createElement('ol');
+    this.olRaceResults.append(this.buttonSubmitTime);
 
     this.sectionRaceResults = document.createElement('section');
     this.sectionRaceResults.hidden = true;
     this.sectionRaceResults.id = 'timer-results';
-    this.sectionRaceResults.append(this.buttonSubmitTime, this.olRaceResults);
+    this.sectionRaceResults.append(this.olRaceResults);
 
     shadow.append(link, this.sectionTimer, this.sectionRaceResults);
 
