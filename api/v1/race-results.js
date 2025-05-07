@@ -14,7 +14,7 @@ async function init() {
 
 const dbConn = init();
 
-export const getAllRaceResults = async () => {
+export async function getAllRaceResults() {
   const db = await dbConn;
   return db.all(
     `
@@ -31,9 +31,9 @@ export const getAllRaceResults = async () => {
       race_results.race_results_time desc;
     `,
   );
-};
+}
 
-export const addRaceResults = async (raceResults) => {
+export async function addRaceResults(raceResults) {
   if (raceResults.length === 0) return raceResults;
 
   const db = await dbConn;
@@ -55,4 +55,4 @@ export const addRaceResults = async (raceResults) => {
   }
 
   return getAllRaceResults();
-};
+}

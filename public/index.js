@@ -17,14 +17,14 @@ const ui = {};
 
 const templates = {};
 
-const getHandles = () => {
+function getHandles() {
   ui.screens = {};
   ui.mainnav = document.querySelector('header > nav');
   ui.main = document.querySelector('main');
   ui.getScreens = () => Object.values(ui.screens);
   ui.getButtons = () => Object.values(ui.buttons);
   templates.screen = document.querySelector('#tmp-screen');
-};
+}
 
 function buildScreens() {
   const template = templates.screen;
@@ -46,7 +46,7 @@ function buildScreens() {
 function setupNav() {
   ui.buttons = {};
   for (const page of pages) {
-    if (page.screen === 'error' || page.screen === 'race-result') {
+    if (page.screen === 'error') {
       continue;
     }
     const button = document.createElement('button');
@@ -100,7 +100,6 @@ function enableAllButtons() {
 export function show(event) {
   // ui.previous is used after one of the buttons on the login screen
   // is pressed to return the user to where they were.
-  console.log(event);
   ui.previous = ui.current;
   const screen = event?.target?.dataset?.screen ?? 'home';
   showScreen(screen);
@@ -153,13 +152,13 @@ async function refreshRaceResults() {
   await raceResults.addRaceSections();
 }
 
-const main = async () => {
+async function main() {
   getHandles();
   buildScreens();
   setupNav();
   await getContent();
   window.addEventListener('popstate', loadInitialScreen);
   loadInitialScreen();
-};
+}
 
 main();

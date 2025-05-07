@@ -35,19 +35,29 @@ export class RaceResults extends HTMLElement {
       const raceOl = document.createElement('ol');
 
       const raceResults = JSON.parse(race.raceResults);
-      const raceResultsId = JSON.parse(race.raceResultsId);
+      const raceResultsIds = JSON.parse(race.raceResultsId);
       for (let i = 0; i < raceResults.length; i++) {
+        const raceResultsId = raceResultsIds[i];
+        const raceResult = raceResults[i];
+
         const resultLi = document.createElement('li');
-        resultLi.textContent = raceResults[i];
 
         const resultButton = document.createElement('button');
-        resultButton.id = raceResultsId[i];
+        resultButton.id = raceResultsId;
+        resultButton.textContent = raceResult;
         resultButton.dataset.screen = 'race-result';
         resultButton.addEventListener('click', show);
         resultButton.addEventListener('click', storeState);
-        resultButton.appendChild(resultLi);
+        resultButton.addEventListener('click', () => {
+          window.history.replaceState(
+            null,
+            null,
+            `?raceResultId=${raceResultsId}`,
+          );
+        });
+        resultLi.append(resultButton);
 
-        raceOl.appendChild(resultButton);
+        raceOl.appendChild(resultLi);
       }
 
       const raceSection = document.createElement('section');
