@@ -14,4 +14,6 @@ CREATE TABLE race_result (
 );
 
 -- Down
+DROP TABLE race_results;
+
 DROP TABLE race_result;

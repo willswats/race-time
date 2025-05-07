@@ -14,6 +14,23 @@ async function init() {
 
 const dbConn = init();
 
+export async function getRaceResult(raceResultId) {
+  const db = await dbConn;
+  return db.get(
+    `
+    SELECT 
+      race_result.race_result_id AS raceResultId,
+      race_result.race_result_id AS raceResult,
+      race_result.race_result_first_name AS raceResultFirstName,
+      race_result.race_result_last_name AS raceResultLastName
+    FROM race_result 
+    WHERE 
+      race_result.race_result_id = ?
+    `,
+    [raceResultId],
+  );
+}
+
 export async function getAllRaceResults() {
   const db = await dbConn;
   return db.all(
@@ -41,9 +58,11 @@ export async function addRaceResults(raceResults) {
 
   for (const raceResult of raceResults) {
     const raceResultId = uuid();
-    await db.run('INSERT INTO race_result VALUES (?, ?)', [
+    await db.run('INSERT INTO race_result VALUES (?, ?, ?, ?)', [
       raceResultId,
       raceResult,
+      '',
+      '',
     ]);
 
     const raceResultsId = uuid();
@@ -55,4 +74,32 @@ export async function addRaceResults(raceResults) {
   }
 
   return getAllRaceResults();
+}
+
+export async function updateRaceResultNames(
+  raceResultId,
+  raceResultFirstName,
+  raceResultLastName,
+) {
+  if (
+    raceResultId.length === 0 ||
+    (raceResultFirstName.length === 0 && raceResultLastName === 0)
+  )
+    return;
+
+  const db = await dbConn;
+
+  await db.run(
+    `
+    UPDATE race_result
+    SET 
+      race_result.race_result_first_name = (?) 
+      race_result.race_result_last_name = (?)
+    WHERE
+      race_result.race_result_id = (?)
+    `,
+    [raceResultFirstName, raceResultLastName, raceResultId],
+  );
+
+  return getRaceResult(raceResultId);
 }
