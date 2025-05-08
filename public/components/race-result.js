@@ -11,12 +11,20 @@ export class RaceResult extends HTMLElement {
     this.form = document.createElement('form');
 
     this.labelFirstName = document.createElement('label');
-    this.labelFirstName.textContent = 'First Name';
+    this.labelFirstName.textContent = 'First name';
+    this.labelFirstName.htmlFor = 'input-first-name';
+
     this.inputFirstName = document.createElement('input');
+    this.inputFirstName.id = 'input-first-name';
 
     this.labelLastName = document.createElement('label');
-    this.labelLastName.textContent = 'Last Name';
+    this.labelLastName.textContent = 'Last name';
+    this.labelLastName.htmlFor = 'input-last-name';
+
     this.inputLastName = document.createElement('input');
+    this.inputLastName.id = 'input-last-name';
+
+    this.paragraphFeedback = document.createElement('p');
 
     this.buttonSubmit = document.createElement('button');
     this.buttonSubmit.textContent = 'Submit';
@@ -29,6 +37,7 @@ export class RaceResult extends HTMLElement {
       this.inputFirstName,
       this.labelLastName,
       this.inputLastName,
+      this.paragraphFeedback,
       this.buttonSubmit,
     );
 
@@ -68,6 +77,16 @@ export class RaceResult extends HTMLElement {
     }
   }
 
+  setSuccessColour(e) {
+    e.classList.remove('error');
+    e.classList.add('success');
+  }
+
+  setErrorColour(e) {
+    e.classList.remove('success');
+    e.classList.add('error');
+  }
+
   async submitRaceResultNames(event) {
     event.preventDefault();
 
@@ -75,11 +94,16 @@ export class RaceResult extends HTMLElement {
     const raceResultFirstName = this.inputFirstName.value;
     const raceResultLastName = this.inputLastName.value;
 
-    if (
-      raceResultId === '' ||
-      (raceResultFirstName === '' && raceResultLastName === '')
-    )
+    if (raceResultId === null) {
+      this.setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'Invalid race result id!';
       return;
+    } else if (raceResultFirstName === '' && raceResultLastName === '') {
+      this.setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent =
+        'First name or last name must contain a value!';
+      return;
+    }
 
     const payload = { raceResultId, raceResultFirstName, raceResultLastName };
 
@@ -90,8 +114,8 @@ export class RaceResult extends HTMLElement {
     });
 
     if (response.ok) {
-      const updatedRaceResult = await response.json();
-      console.log(updatedRaceResult);
+      this.setSuccessColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'Successfully submitted!';
     } else {
       console.log('failed to send message', response);
     }
