@@ -71,12 +71,12 @@ export class RaceTimer extends HTMLElement {
     this.sectionTimer.append(this.sectionTimerTime, this.sectionTimerButtons);
 
     this.olRaceResults = document.createElement('ol');
-    this.olRaceResults.append(this.buttonSubmitTime);
+    this.olRaceResults.reversed = true;
 
     this.sectionRaceResults = document.createElement('section');
     this.sectionRaceResults.hidden = true;
     this.sectionRaceResults.id = 'timer-results';
-    this.sectionRaceResults.append(this.olRaceResults);
+    this.sectionRaceResults.append(this.buttonSubmitTime, this.olRaceResults);
 
     shadow.append(link, this.sectionTimer, this.sectionRaceResults);
 
@@ -137,11 +137,12 @@ export class RaceTimer extends HTMLElement {
   }
 
   recordTimerButton() {
-    this.raceResults.push(this.timeString);
+    // unshift instead of append so that race results can appear at the top of the ordered list
+    this.raceResults.unshift(this.timeString);
 
     const record = document.createElement('li');
     record.textContent = this.timeString;
-    this.olRaceResults.appendChild(record);
+    this.olRaceResults.prepend(record);
     this.sectionRaceResults.hidden = false;
   }
 
@@ -174,7 +175,8 @@ export class RaceTimer extends HTMLElement {
   }
 
   async submitTime() {
-    const payload = { raceResults: this.raceResults };
+    // reverse the race results as unshift was used and not append
+    const payload = { raceResults: this.raceResults.reverse() };
 
     const response = await fetch('/api/v1/race-results', {
       method: 'POST',
