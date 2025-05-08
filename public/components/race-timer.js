@@ -131,6 +131,7 @@ export class RaceTimer extends HTMLElement {
     this.buttonStartTimer.hidden = true;
     this.buttonStopTimer.hidden = false;
     this.buttonRecordTimer.hidden = false;
+    this.buttonSubmitTime.hidden = true;
     this.sectionRaceResults.hidden = false;
   }
 
@@ -163,6 +164,10 @@ export class RaceTimer extends HTMLElement {
     this.buttonSubmitTime.hidden = false;
     this.buttonStopTimer.hidden = true;
     this.buttonRecordTimer.hidden = true;
+
+    if (this.raceResults.length <= 0) {
+      this.sectionRaceResults.hidden = true;
+    }
   }
 
   stopTimerButton() {
