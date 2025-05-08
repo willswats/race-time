@@ -29,13 +29,14 @@ export class RaceTimer extends HTMLElement {
 
     this.buttonRecordTimer = document.createElement('button');
     this.buttonRecordTimer.textContent = 'Record';
-    this.buttonRecordTimer.hidden = true;
 
     this.buttonStopTimer = document.createElement('button');
     this.buttonStopTimer.textContent = 'Stop';
+    this.buttonStopTimer.hidden = true;
 
     this.buttonSubmitTime = document.createElement('button');
     this.buttonSubmitTime.textContent = 'Submit';
+    this.buttonSubmitTime.hidden = true;
 
     this.buttonStartTimer.addEventListener(
       'click',
@@ -62,7 +63,6 @@ export class RaceTimer extends HTMLElement {
     this.sectionTimerButtons.id = 'timer-buttons';
     this.sectionTimerButtons.append(
       this.buttonStartTimer,
-      this.buttonRecordTimer,
       this.buttonStopTimer,
     );
 
@@ -73,10 +73,20 @@ export class RaceTimer extends HTMLElement {
     this.olRaceResults = document.createElement('ol');
     this.olRaceResults.reversed = true;
 
+    this.sectionRaceResultsButtons = document.createElement('section');
+    this.sectionRaceResultsButtons.id = 'timer-results-buttons';
+    this.sectionRaceResultsButtons.append(
+      this.buttonRecordTimer,
+      this.buttonSubmitTime,
+    );
+
     this.sectionRaceResults = document.createElement('section');
     this.sectionRaceResults.hidden = true;
     this.sectionRaceResults.id = 'timer-results';
-    this.sectionRaceResults.append(this.buttonSubmitTime, this.olRaceResults);
+    this.sectionRaceResults.append(
+      this.sectionRaceResultsButtons,
+      this.olRaceResults,
+    );
 
     shadow.append(link, this.sectionTimer, this.sectionRaceResults);
 
@@ -119,7 +129,9 @@ export class RaceTimer extends HTMLElement {
   startTimer() {
     this.startDate = Date.now();
     this.buttonStartTimer.hidden = true;
+    this.buttonStopTimer.hidden = false;
     this.buttonRecordTimer.hidden = false;
+    this.sectionRaceResults.hidden = false;
   }
 
   startTimerButton() {
@@ -143,12 +155,13 @@ export class RaceTimer extends HTMLElement {
     const record = document.createElement('li');
     record.textContent = this.timeString;
     this.olRaceResults.prepend(record);
-    this.sectionRaceResults.hidden = false;
   }
 
   stopTimer() {
     this.startDate = null;
     this.buttonStartTimer.hidden = false;
+    this.buttonSubmitTime.hidden = false;
+    this.buttonStopTimer.hidden = true;
     this.buttonRecordTimer.hidden = true;
   }
 

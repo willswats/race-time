@@ -52,6 +52,10 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-size: 1.2rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 2rem;
+  padding: 1rem 2rem 1rem 2rem;
 }
 
 #timer-results ol {
@@ -59,13 +63,11 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 2rem;
-  padding: 1rem 2rem 1rem 2rem;
 }
 
-#timer-results button {
+#timer-results-buttons {
+  display: flex;
+  width: 100%;
   margin-bottom: 1rem;
 }
 
