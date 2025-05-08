@@ -1,4 +1,4 @@
-import { changeContent } from '../index.js';
+import { addEventListenersChangeContentButtonRefresh } from '../index.js';
 
 export class RaceResults extends HTMLElement {
   constructor() {
@@ -46,8 +46,8 @@ export class RaceResults extends HTMLElement {
         resultButton.id = raceResultsId;
         resultButton.textContent = raceResult;
         resultButton.dataset.screen = 'race-result';
+        addEventListenersChangeContentButtonRefresh(resultButton);
         resultButton.addEventListener('click', () => {
-          changeContent('race-result');
           this.appendParamToUrl(raceResultsId);
         });
         resultLi.append(resultButton);

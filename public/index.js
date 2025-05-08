@@ -1,24 +1,60 @@
-// This file contains the code to fetch the screen content without refreshing.
-// This is written so that the content is fetched each time, instead
-// of it being stored in a ui object and selectively hidden and shown, because
-// I need the components to re-mount so that they fetch new data
+const pages = [
+  {
+    screen: 'home',
+    title: 'Home',
+  },
+  {
+    screen: 'race-results',
+    title: 'Race Results',
+  },
+  {
+    screen: 'race-result',
+    title: 'Race Result',
+  },
+  {
+    screen: 'error',
+    title: 'Error',
+  },
+];
 
 const ui = {};
+const templates = {};
 
+// Set up handles for use later
 function getHandles() {
+  ui.screens = {};
   ui.nav = document.querySelector('nav');
   ui.main = document.querySelector('main');
+  ui.getScreens = () => Object.values(ui.screens);
+  templates.screen = document.querySelector('#tmp-screen');
 }
 
-function setupNavButtons() {
-  const buttons = ui.nav.querySelectorAll('button');
-  for (const button of buttons) {
-    button.addEventListener('click', () =>
-      changeContent(button.dataset.screen),
-    );
+// Create section elements and append them to main
+// Add to ui.screens for use later
+function buildScreen(template, screen) {
+  const section = template.content.cloneNode(true).firstElementChild;
+  section.dataset.name = screen;
+  ui.main.append(section);
+  ui.screens[screen] = section;
+}
+
+// Execute for all pages
+function buildScreens() {
+  const template = templates.screen;
+  for (const page of pages) {
+    buildScreen(template, page.screen);
   }
 }
 
+// Add event listeners to nav buttons
+function setupNavButtons() {
+  const buttons = ui.nav.querySelectorAll('button');
+  for (const button of buttons) {
+    addEventListenersChangeContentButton(button);
+  }
+}
+
+// Fetch content from public/screens
 async function fetchScreenContent(screen) {
   const url = `/screens/${screen}.inc`;
   const response = await fetch(url);
@@ -29,34 +65,85 @@ async function fetchScreenContent(screen) {
   }
 }
 
-async function populateContent(screen) {
+// Fetch content and put it into an article
+// Add the article to the ui.screens section (buildScreen)
+async function getContent(screen) {
   const content = await fetchScreenContent(screen);
   const article = document.createElement('article');
-  article.dataset.screen = screen;
   article.innerHTML = content;
-  ui.article = article;
-  ui.main.append(article);
+  ui.screens[screen].append(article);
 }
 
-export function changeContent(screen) {
-  if (ui.article.dataset.screen !== screen) {
-    ui.main.removeChild(ui.article);
-    storeState(screen);
-    populateContent(screen);
+// Execute for all pages
+async function getPageContent() {
+  for (const page of pages) {
+    getContent(page.screen);
   }
+}
+
+function addEventListenersChangeContentButton(button) {
+  button.addEventListener('click', show);
+  button.addEventListener('click', storeState);
+}
+
+// For buttons that require a content refresh
+export function addEventListenersChangeContentButtonRefresh(button) {
+  button.addEventListener('click', refreshContent);
+  addEventListenersChangeContentButton(button);
+}
+
+// Remove element from <main>
+// Delete the element in ui.screens
+// Refresh the screen by running getContent and buildScreen for it
+function refreshContent(event) {
+  const screen = event?.target?.dataset?.screen;
+  if (screen) {
+    ui.main.removeChild(ui.screens[screen]);
+    delete ui.screens[screen];
+
+    getContent(screen);
+    buildScreen(templates.screen, screen);
+  }
+}
+
+function show(event) {
+  const screen = event?.target?.dataset?.screen ?? 'home';
+  showScreen(screen);
+}
+
+function showScreen(screen) {
+  hideAllScreens();
+
+  if (!ui.screens[screen]) {
+    screen = 'error';
+  }
+
+  ui.current = screen;
+  document.title = `Race Time | ${screen}`;
+  showElement(ui.screens[screen]);
 }
 
 function loadScreen() {
-  const path = readPath();
-  // Remove previous article if it exists
-  if (ui.article && ui.article.dataset.screen !== path) {
-    ui.main.removeChild(ui.article);
-  }
-  populateContent(path);
+  ui.current = readPath();
+  showScreen(ui.current);
 }
 
-function storeState(screen) {
-  history.pushState(null, null, `/app/${screen}`);
+function storeState() {
+  history.pushState(null, null, `/app/${ui.current}`);
+}
+
+function hideAllScreens() {
+  for (const screen of ui.getScreens()) {
+    hideElement(screen);
+  }
+}
+
+function showElement(e) {
+  e.classList.remove('hidden');
+}
+
+function hideElement(e) {
+  e.classList.add('hidden');
 }
 
 function readPath() {
@@ -69,6 +156,8 @@ function readPath() {
 
 function main() {
   getHandles();
+  getPageContent();
+  buildScreens();
   setupNavButtons();
   // this event listener is needed so that loadScreen
   // will run when the user presses the forward and
