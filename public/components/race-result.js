@@ -8,24 +8,21 @@ export class RaceResult extends HTMLElement {
     link.setAttribute('href', import.meta.resolve('./race-result.css'));
     this.shadow.append(link);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    this.raceResultId = urlParams.get('raceResultId');
-    this.raceResult = await this.getRaceResult();
-
     this.form = document.createElement('form');
 
     this.labelFirstName = document.createElement('label');
     this.labelFirstName.textContent = 'First Name';
     this.inputFirstName = document.createElement('input');
-    this.inputFirstName.value = this.raceResult.raceResultFirstName;
 
     this.labelLastName = document.createElement('label');
     this.labelLastName.textContent = 'Last Name';
     this.inputLastName = document.createElement('input');
-    this.inputFirstName.value = this.raceResult.raceResultLastName;
 
     this.buttonSubmit = document.createElement('button');
     this.buttonSubmit.textContent = 'Submit';
+    this.form.addEventListener('submit', (event) =>
+      this.submitRaceResultNames(event),
+    );
 
     this.form.append(
       this.labelFirstName,
@@ -37,6 +34,8 @@ export class RaceResult extends HTMLElement {
 
     this.shadow.append(this.form);
 
+    await this.setRaceResult();
+
     this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
 
@@ -45,6 +44,16 @@ export class RaceResult extends HTMLElement {
   }
 
   update() {}
+
+  async setRaceResult() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.raceResultId = urlParams.get('raceResultId');
+
+    this.raceResult = await this.getRaceResult();
+    this.inputFirstName.value = this.raceResult.raceResultFirstName;
+    this.inputLastName.value = this.raceResult.raceResultLastName;
+    console.log(this.raceResult);
+  }
 
   async getRaceResult() {
     const response = await fetch(
@@ -59,7 +68,9 @@ export class RaceResult extends HTMLElement {
     }
   }
 
-  async submitRaceResultNames() {
+  async submitRaceResultNames(event) {
+    event.preventDefault();
+
     const raceResultId = this.raceResultId;
     const raceResultFirstName = this.inputFirstName.value;
     const raceResultLastName = this.inputLastName.value;

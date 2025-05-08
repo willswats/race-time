@@ -82,8 +82,8 @@ export async function updateRaceResultNames(
   raceResultLastName,
 ) {
   if (
-    raceResultId.length === 0 ||
-    (raceResultFirstName.length === 0 && raceResultLastName === 0)
+    raceResultId === '' ||
+    (raceResultFirstName.length === '' && raceResultLastName === '')
   )
     return;
 
@@ -93,10 +93,10 @@ export async function updateRaceResultNames(
     `
     UPDATE race_result
     SET 
-      race_result.race_result_first_name = (?) 
-      race_result.race_result_last_name = (?)
+      race_result_first_name = (?),
+      race_result_last_name = (?)
     WHERE
-      race_result.race_result_id = (?)
+      race_result_id = (?)
     `,
     [raceResultFirstName, raceResultLastName, raceResultId],
   );
