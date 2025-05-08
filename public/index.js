@@ -80,7 +80,7 @@ async function getContent(screen) {
 }
 
 // Execute for all pages
-async function getPageContent() {
+function getPageContent() {
   for (const page of pages) {
     getContent(page.screen);
   }
