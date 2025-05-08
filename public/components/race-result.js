@@ -48,10 +48,11 @@ export class RaceResult extends HTMLElement {
   async setRaceResult() {
     const urlParams = new URLSearchParams(window.location.search);
     this.raceResultId = urlParams.get('raceResultId');
-
-    this.raceResult = await this.getRaceResult();
-    this.inputFirstName.value = this.raceResult.raceResultFirstName;
-    this.inputLastName.value = this.raceResult.raceResultLastName;
+    if (this.raceResultId) {
+      this.raceResult = await this.getRaceResult();
+      this.inputFirstName.value = this.raceResult.raceResultFirstName;
+      this.inputLastName.value = this.raceResult.raceResultLastName;
+    }
   }
 
   async getRaceResult() {
