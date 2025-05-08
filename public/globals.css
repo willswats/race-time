@@ -71,3 +71,11 @@ input[type='range']::-moz-range-thumb {
   /* Remove Firefox default browser style */
   background-color: var(--text-color);
 }
+
+.success {
+  color: lightgreen;
+}
+
+.error {
+  color: red;
+}

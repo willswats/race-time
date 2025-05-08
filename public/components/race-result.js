@@ -1,3 +1,5 @@
+import { setSuccessColour, setErrorColour } from '../utils.js';
+
 export class RaceResult extends HTMLElement {
   async connectedCallback() {
     this.shadow = this.attachShadow({ mode: 'closed' });
@@ -77,16 +79,6 @@ export class RaceResult extends HTMLElement {
     }
   }
 
-  setSuccessColour(e) {
-    e.classList.remove('error');
-    e.classList.add('success');
-  }
-
-  setErrorColour(e) {
-    e.classList.remove('success');
-    e.classList.add('error');
-  }
-
   async submitRaceResultNames(event) {
     event.preventDefault();
 
@@ -95,11 +87,11 @@ export class RaceResult extends HTMLElement {
     const raceResultLastName = this.inputLastName.value;
 
     if (raceResultId === null) {
-      this.setErrorColour(this.paragraphFeedback);
+      setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Invalid race result id!';
       return;
     } else if (raceResultFirstName === '' && raceResultLastName === '') {
-      this.setErrorColour(this.paragraphFeedback);
+      setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
         'First name or last name must contain a value!';
       return;
@@ -114,9 +106,12 @@ export class RaceResult extends HTMLElement {
     });
 
     if (response.ok) {
-      this.setSuccessColour(this.paragraphFeedback);
+      setSuccessColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Successfully submitted!';
     } else {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent =
+        'Failed to send message (check console)!';
       console.log('failed to send message', response);
     }
   }

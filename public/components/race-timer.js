@@ -1,3 +1,5 @@
+import { setSuccessColour, setErrorColour } from '../utils.js';
+
 export class RaceTimer extends HTMLElement {
   constructor() {
     super();
@@ -80,11 +82,14 @@ export class RaceTimer extends HTMLElement {
       this.buttonSubmitTime,
     );
 
+    this.paragraphFeedback = document.createElement('p');
+
     this.sectionRaceResults = document.createElement('section');
     this.sectionRaceResults.hidden = true;
     this.sectionRaceResults.id = 'timer-results';
     this.sectionRaceResults.append(
       this.sectionRaceResultsButtons,
+      this.paragraphFeedback,
       this.olRaceResults,
     );
 
@@ -133,6 +138,7 @@ export class RaceTimer extends HTMLElement {
     this.buttonRecordTimer.hidden = false;
     this.buttonSubmitTime.hidden = true;
     this.sectionRaceResults.hidden = false;
+    this.paragraphFeedback.textContent = '';
   }
 
   startTimerButton() {
@@ -203,10 +209,13 @@ export class RaceTimer extends HTMLElement {
     });
 
     if (response.ok) {
-      const updatedRaceResults = await response.json();
-      console.log(updatedRaceResults);
+      setSuccessColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'Successfully submitted!';
     } else {
-      console.log('failed to send message', response);
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent =
+        'Failed to send message (check console)!';
+      console.log('Failed to send message', response);
     }
   }
 

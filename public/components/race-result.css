@@ -32,11 +32,3 @@ button {
   border-radius: 2rem;
   margin-top: 1rem;
 }
-
-.success {
-  color: lightgreen;
-}
-
-.error {
-  color: red;
-}
