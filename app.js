@@ -39,6 +39,10 @@ async function apiAddRaceResults(req, res) {
   res.json(newRaceResults);
 }
 
+function notFound(req, res) {
+  res.status(404).sendFile(`${__dirname}/server-error-pages/404.html`);
+}
+
 app.use('/', express.static(join(__dirname, 'public')));
 app.use('/app/*', express.static(join(__dirname, 'public/index.html')));
 
@@ -46,6 +50,7 @@ app.get('/api/v1/race-result', apiGetRaceResult);
 app.patch('/api/v1/race-result', express.json(), apiUpdateRaceResultNames);
 app.get('/api/v1/race-results', apiGetAllRaceResults);
 app.post('/api/v1/race-results', express.json(), apiAddRaceResults);
+app.all('*', notFound);
 
 app.listen(port, () => {
   console.log(`App listening on http://localhost:${port}`);
