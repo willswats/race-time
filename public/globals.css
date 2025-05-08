@@ -23,6 +23,11 @@ ol {
   list-style: inside decimal;
 }
 
+select {
+  color: #fff;
+  border: none;
+}
+
 button {
   color: var(--text-color);
   border: none;
