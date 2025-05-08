@@ -33,6 +33,10 @@ button {
   margin-top: 1rem;
 }
 
+button:hover {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
 @media screen and (max-width: 800px) {
   form {
     width: 100%;

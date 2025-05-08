@@ -72,6 +72,10 @@ input[type='range']::-moz-range-thumb {
   background-color: var(--text-color);
 }
 
+.hidden {
+  display: none;
+}
+
 .success {
   color: lightgreen;
 }
