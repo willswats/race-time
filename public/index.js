@@ -1,73 +1,21 @@
-const pages = [
-  {
-    screen: 'home',
-    title: 'Home',
-  },
-  {
-    screen: 'race-results',
-    title: 'Race Results',
-  },
-  {
-    screen: 'race-result',
-    title: 'Race Result',
-  },
-];
-
 const ui = {};
 
-const templates = {};
-
 function getHandles() {
-  ui.screens = {};
-  ui.mainnav = document.querySelector('header > nav');
+  ui.nav = document.querySelector('nav');
   ui.main = document.querySelector('main');
-  ui.getScreens = () => Object.values(ui.screens);
-  ui.getButtons = () => Object.values(ui.buttons);
-  templates.screen = document.querySelector('#tmp-screen');
 }
 
-function buildScreens() {
-  const template = templates.screen;
-  for (const page of pages) {
-    // by default we get a document fragment containing our <section>, so
-    // we have to ask for its firstElementChild.
-    // Not intuitive, but there you go
-    const section = template.content.cloneNode(true).firstElementChild;
-
-    section.dataset.id = `sect-${page.screen}`;
-    section.dataset.name = page.screen;
-
-    ui.main.append(section);
-    // store this screen in the ui global for eas(ier) access later.
-    ui.screens[page.screen] = section;
+function setupNavButtons() {
+  const buttons = ui.nav.querySelectorAll('button');
+  for (const button of buttons) {
+    button.addEventListener('click', () =>
+      changeContent(button.dataset.screen),
+    );
   }
 }
 
-function setupNav() {
-  ui.buttons = {};
-  for (const page of pages) {
-    if (page.screen === 'error') {
-      continue;
-    }
-    const button = document.createElement('button');
-    button.textContent = page.title;
-    button.dataset.screen = page.screen;
-    button.addEventListener('click', show);
-    button.addEventListener('click', storeState);
-
-    if (button.textContent === 'Race Results') {
-      button.addEventListener('click', refreshRaceResults);
-    }
-
-    if (button.textContent !== 'Race Result') {
-      ui.mainnav.append(button);
-    }
-    ui.buttons[page.screen] = button;
-  }
-}
-
-async function fetchScreenContent(s) {
-  const url = `/screens/${s}.inc`;
+async function fetchScreenContent(screen) {
+  const url = `/screens/${screen}.inc`;
   const response = await fetch(url);
   if (response.ok) {
     return await response.text();
@@ -76,55 +24,34 @@ async function fetchScreenContent(s) {
   }
 }
 
-async function getContent() {
-  for (const page of pages) {
-    const content = await fetchScreenContent(page.screen);
-    const article = document.createElement('article');
-    article.innerHTML = content;
-    ui.screens[page.screen].append(article);
+async function populateContent(screen) {
+  const content = await fetchScreenContent(screen);
+  const article = document.createElement('article');
+  article.dataset.screen = screen;
+  article.innerHTML = content;
+  ui.article = article;
+  ui.main.append(article);
+}
+
+export function changeContent(screen) {
+  if (ui.article.dataset.screen !== screen) {
+    ui.main.removeChild(ui.article);
+    storeState(screen);
+    populateContent(screen);
   }
 }
 
-function hideAllScreens() {
-  for (const screen of ui.getScreens()) {
-    hideElement(screen);
+function loadScreen() {
+  const path = readPath();
+  // Remove previous article if it exists
+  if (ui.article && ui.article.dataset.screen !== path) {
+    ui.main.removeChild(ui.article);
   }
-}
-/*
- Enable all the header nav buttons
-*/
-function enableAllButtons() {
-  for (const button of ui.getButtons()) {
-    button.removeAttribute('disabled');
-  }
+  populateContent(path);
 }
 
-export function show(event) {
-  // ui.previous is used after one of the buttons on the login screen
-  // is pressed to return the user to where they were.
-  ui.previous = ui.current;
-  const screen = event?.target?.dataset?.screen ?? 'home';
-  showScreen(screen);
-}
-
-function showScreen(name) {
-  hideAllScreens();
-  enableAllButtons();
-  if (!ui.screens[name]) {
-    name = 'error';
-  }
-  showElement(ui.screens[name]);
-  // store the current application state (i.e. which screen is currently showing)
-  // used by storeState() to push this onto the browser's history stack
-  ui.current = name;
-  document.title = `Race Time | ${name}`;
-  if (name !== 'error') {
-    ui.buttons[name].disabled = 'disabled';
-  }
-}
-
-export function storeState() {
-  history.pushState(ui.current, ui.current, `/app/${ui.current}`);
+function storeState(screen) {
+  history.pushState(null, null, `/app/${screen}`);
 }
 
 function readPath() {
@@ -135,37 +62,11 @@ function readPath() {
   return 'home';
 }
 
-function showElement(e) {
-  e.classList.remove('hidden');
-}
-
-function hideElement(e) {
-  e.classList.add('hidden');
-}
-
-function loadInitialScreen() {
-  ui.current = readPath();
-  showScreen(ui.current);
-}
-
-export async function refreshRaceResult() {
-  const raceResult = document.querySelector('race-result');
-  await raceResult.setRaceResult();
-}
-
-async function refreshRaceResults() {
-  const raceResults = document.querySelector('race-results');
-  raceResults.removeRaceSections();
-  await raceResults.addRaceSections();
-}
-
-async function main() {
+function main() {
   getHandles();
-  buildScreens();
-  setupNav();
-  await getContent();
-  window.addEventListener('popstate', loadInitialScreen);
-  loadInitialScreen();
+  setupNavButtons();
+  window.addEventListener('popstate', loadScreen);
+  loadScreen();
 }
 
 main();

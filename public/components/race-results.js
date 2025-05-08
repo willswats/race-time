@@ -1,4 +1,4 @@
-import { show, storeState, refreshRaceResult } from '../index.js';
+import { changeContent } from '../index.js';
 
 export class RaceResults extends HTMLElement {
   constructor() {
@@ -46,15 +46,9 @@ export class RaceResults extends HTMLElement {
         resultButton.id = raceResultsId;
         resultButton.textContent = raceResult;
         resultButton.dataset.screen = 'race-result';
-        resultButton.addEventListener('click', show);
-        resultButton.addEventListener('click', storeState);
         resultButton.addEventListener('click', () => {
-          window.history.replaceState(
-            null,
-            null,
-            `?raceResultId=${raceResultsId}`,
-          );
-          refreshRaceResult();
+          changeContent('race-result');
+          this.appendParamToUrl(raceResultsId);
         });
         resultLi.append(resultButton);
 
@@ -73,6 +67,10 @@ export class RaceResults extends HTMLElement {
     for (const raceSection of this.raceSections) {
       raceSection.remove();
     }
+  }
+
+  appendParamToUrl(raceResultsId) {
+    window.history.replaceState(null, null, `?raceResultId=${raceResultsId}`);
   }
 
   async getAllRaceResults() {
