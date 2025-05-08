@@ -65,6 +65,9 @@ function readPath() {
 function main() {
   getHandles();
   setupNavButtons();
+  // this event listener is needed so that loadScreen
+  // will run when the user presses the forward and
+  // back buttons on the browser
   window.addEventListener('popstate', loadScreen);
   loadScreen();
 }
