@@ -51,6 +51,7 @@ function setupNavButtons() {
   const buttons = ui.nav.querySelectorAll('button');
   for (const button of buttons) {
     if (button.dataset.screen === 'race-results') {
+      // The race-results button needs to be able to refresh its data in case a user submits new data
       addEventListenersChangeContentButtonRefresh(button);
     } else {
       addEventListenersChangeContentButton(button);
