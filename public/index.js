@@ -1,3 +1,8 @@
+// This file contains the code to fetch the screen content without refreshing.
+// This is written so that the content is fetched each time, instead
+// of it being stored in a ui object and selectively hidden and shown, because
+// I need the components to re-mount so that they fetch new data
+
 const ui = {};
 
 function getHandles() {
