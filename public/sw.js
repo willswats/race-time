@@ -29,10 +29,16 @@ const CACHEABLE = [
   './sw.js',
   './register-sw.js',
   './index.html',
+  './index.js',
+  './index.css',
+  './globals.css',
   './manifest.json',
-  './race-results/index.html',
   './components/race-timer.js',
+  './components/race-timer.css',
   './components/race-results.js',
+  './components/race-results.css',
+  './components/race-result.js',
+  './components/race-result.css',
 ];
 
 /* Prepare and populate a cache. */
