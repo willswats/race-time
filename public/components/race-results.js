@@ -63,12 +63,6 @@ export class RaceResults extends HTMLElement {
     }
   }
 
-  removeRaceSections() {
-    for (const raceSection of this.raceSections) {
-      raceSection.remove();
-    }
-  }
-
   appendParamToUrl(raceResultsId) {
     window.history.replaceState(null, null, `?raceResultId=${raceResultsId}`);
   }
