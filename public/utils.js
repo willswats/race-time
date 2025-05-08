@@ -1,3 +1,9 @@
+export const ROLES = {
+  RUNNER: 'runner',
+  MARSHAL: 'marshal',
+  ORGANISER: 'organiser',
+};
+
 export function setSuccessColour(e) {
   e.classList.remove('error');
   e.classList.add('success');
@@ -6,4 +12,10 @@ export function setSuccessColour(e) {
 export function setErrorColour(e) {
   e.classList.remove('success');
   e.classList.add('error');
+}
+
+export function getRoleDropDownValue() {
+  const roleDropDown = document.querySelector('role-drop-down');
+  const value = roleDropDown.getCurrentValue();
+  return value;
 }
