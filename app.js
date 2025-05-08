@@ -39,7 +39,7 @@ async function apiAddRaceResults(req, res) {
   res.json(newRaceResults);
 }
 
-function notFound(req, res) {
+function notFound(_, res) {
   res.status(404).sendFile(`${__dirname}/server-error-pages/404.html`);
 }
 
