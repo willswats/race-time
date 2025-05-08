@@ -10,7 +10,7 @@ export class RaceTimer extends HTMLElement {
     this.minutes = 0;
     this.seconds = 0;
     this.milliseconds = 0;
-    this.timeString = '00:00:00:000';
+    this.timeString = '00:00:00';
 
     this.raceResults = [];
   }
@@ -124,7 +124,7 @@ export class RaceTimer extends HTMLElement {
     this.seconds = this.seconds % 60;
     this.minutes = this.minutes % 60;
 
-    this.timeString = `${this.padToDigits(2, this.hours)}:${this.padToDigits(2, this.minutes)}:${this.padToDigits(2, this.seconds)}:${this.padToDigits(3, this.milliseconds)}`;
+    this.timeString = `${this.padToDigits(2, this.hours)}:${this.padToDigits(2, this.minutes)}:${this.padToDigits(2, this.seconds)}`;
   }
 
   setTimerText() {
