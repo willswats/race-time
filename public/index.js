@@ -59,7 +59,9 @@ function setupNav() {
       button.addEventListener('click', refreshRaceResults);
     }
 
-    ui.mainnav.append(button);
+    if (button.textContent !== 'Race Result') {
+      ui.mainnav.append(button);
+    }
     ui.buttons[page.screen] = button;
   }
 }
