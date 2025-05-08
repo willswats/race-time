@@ -50,7 +50,11 @@ function buildScreens() {
 function setupNavButtons() {
   const buttons = ui.nav.querySelectorAll('button');
   for (const button of buttons) {
-    addEventListenersChangeContentButton(button);
+    if (button.dataset.screen === 'race-results') {
+      addEventListenersChangeContentButtonRefresh(button);
+    } else {
+      addEventListenersChangeContentButton(button);
+    }
   }
 }
 
