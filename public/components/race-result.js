@@ -52,7 +52,6 @@ export class RaceResult extends HTMLElement {
     this.raceResult = await this.getRaceResult();
     this.inputFirstName.value = this.raceResult.raceResultFirstName;
     this.inputLastName.value = this.raceResult.raceResultLastName;
-    console.log(this.raceResult);
   }
 
   async getRaceResult() {

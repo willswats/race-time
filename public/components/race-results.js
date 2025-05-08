@@ -1,4 +1,4 @@
-import { show, storeState } from '../index.js';
+import { show, storeState, refreshRaceResult } from '../index.js';
 
 export class RaceResults extends HTMLElement {
   constructor() {
@@ -54,6 +54,7 @@ export class RaceResults extends HTMLElement {
             null,
             `?raceResultId=${raceResultsId}`,
           );
+          refreshRaceResult();
         });
         resultLi.append(resultButton);
 

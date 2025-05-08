@@ -146,6 +146,11 @@ function loadInitialScreen() {
   showScreen(ui.current);
 }
 
+export async function refreshRaceResult() {
+  const raceResult = document.querySelector('race-result');
+  await raceResult.setRaceResult();
+}
+
 async function refreshRaceResults() {
   const raceResults = document.querySelector('race-results');
   raceResults.removeRaceSections();
