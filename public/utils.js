@@ -25,8 +25,13 @@ export function setErrorColour(e) {
 export async function customAlert(appendEl, text) {
   const customAlert = document.createElement('custom-alert');
   appendEl.append(customAlert);
-  const alertResult = await customAlert.showAlert(text);
-  return alertResult;
+  try {
+    const alertResult = await customAlert.showAlert(text);
+    appendEl.removeChild(customAlert);
+    return alertResult;
+  } catch (e) {
+    appendEl.removeChild(customAlert);
+  }
 }
 
 export function getRoleDropDownValue() {
