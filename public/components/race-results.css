@@ -4,11 +4,26 @@ h1 {
   color: #fff;
   font-size: 2rem;
   margin-bottom: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+h2 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 ol {
   color: #fff;
   font-size: 1.2rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 li {
@@ -21,11 +36,11 @@ li:last-child {
 
 button {
   font-size: 1.2rem;
+  text-decoration: underline;
 }
 
 button:hover {
   color: #a0b1bd;
-  text-decoration: underline;
 }
 
 section {
@@ -46,6 +61,12 @@ section:last-child {
 @media screen and (max-width: 768px) {
   h1 {
     font-size: 1.2rem;
+  }
+
+  h2 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
   }
 
   ol {

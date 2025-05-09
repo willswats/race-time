@@ -84,14 +84,18 @@ export class RaceTimer extends HTMLElement {
 
     this.paragraphFeedback = document.createElement('p');
 
-    this.sectionRaceResults = document.createElement('section');
-    this.sectionRaceResults.hidden = true;
-    this.sectionRaceResults.id = 'timer-results';
-    this.sectionRaceResults.append(
+    this.sectionRaceResultsList = document.createElement('section');
+    this.sectionRaceResultsList.id = 'timer-results-list';
+    this.sectionRaceResultsList.append(
       this.sectionRaceResultsButtons,
       this.paragraphFeedback,
       this.olRaceResults,
     );
+
+    this.sectionRaceResults = document.createElement('section');
+    this.sectionRaceResults.hidden = true;
+    this.sectionRaceResults.id = 'timer-results';
+    this.sectionRaceResults.append(this.sectionRaceResultsList);
 
     this.shadow.append(link, this.sectionTimer, this.sectionRaceResults);
 
