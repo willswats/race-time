@@ -38,8 +38,12 @@ export async function getAllRaceResults() {
     SELECT 
       race_results.race_results_id AS raceResultsId,
       race_results.race_results_time AS raceResultsTime,
-      json_group_array (race_result.race_result_id) AS raceResultsId,
-      json_group_array (race_result.race_result) AS raceResults 
+      json_group_array(
+        json_object(
+            'raceResultId', race_result.race_result_id,
+            'raceResult', race_result.race_result
+        )
+      ) AS raceResults
     FROM race_results 
       INNER JOIN race_result ON race_results.race_result_id = race_result.race_result_id
     GROUP BY
