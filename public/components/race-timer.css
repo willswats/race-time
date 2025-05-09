@@ -74,12 +74,13 @@ button:hover {
   background-color: rgba(0, 0, 0, 0.5);
   padding: 1rem;
   border-radius: 1rem;
+  margin-top: 0.5rem;
 }
 
 #timer-results-buttons {
   display: flex;
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 /* Make hidden work with flexbox https://stackoverflow.com/questions/23772673/hidden-property-does-not-work-with-flex-box */
