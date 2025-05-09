@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 2rem;
+  border-radius: 1rem;
   width: 48rem;
   height: 28rem;
   padding: 2rem;
@@ -40,7 +40,7 @@ button {
   font-size: 1.2rem;
   transition: background-color 0.1s;
   width: 100%;
-  border-radius: 2rem;
+  border-radius: 1rem;
 }
 
 button:hover {
@@ -54,7 +54,7 @@ button:hover {
   align-items: center;
   font-size: 1.2rem;
   background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 2rem;
+  border-radius: 1rem;
   padding: 1rem 2rem 1rem 2rem;
 }
 
@@ -63,6 +63,9 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 #timer-results-buttons {

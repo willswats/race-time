@@ -29,7 +29,7 @@
   background-color: #122634;
   width: 100%;
   overflow: hidden;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
 }
 
 #alert-content p {
