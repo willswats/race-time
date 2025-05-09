@@ -31,7 +31,11 @@ export class RaceResults extends HTMLElement {
 
     for (const race of allRaceResults) {
       const raceH1 = document.createElement('h1');
-      raceH1.textContent = race.raceResultsTime;
+      raceH1.textContent = new Date(race.raceResultsTime).toLocaleDateString();
+
+      const raceH2 = document.createElement('h2');
+      raceH2.textContent = new Date(race.raceResultsTime).toLocaleTimeString();
+
       const raceOl = document.createElement('ol');
 
       const raceResults = JSON.parse(race.raceResults);
@@ -56,7 +60,7 @@ export class RaceResults extends HTMLElement {
       }
 
       const raceSection = document.createElement('section');
-      raceSection.append(raceH1, raceOl);
+      raceSection.append(raceH1, raceH2, raceOl);
       this.raceSections.push(raceSection);
 
       this.shadow.append(raceSection);
