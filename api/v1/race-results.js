@@ -85,11 +85,13 @@ export async function updateRaceResultNames(
   raceResultFirstName,
   raceResultLastName,
 ) {
-  if (
-    raceResultId === '' ||
+  if (raceResultId === null) {
+    throw new Error('Invalid race result id!');
+  } else if (
+    raceResultId === null ||
     (raceResultFirstName.length === '' && raceResultLastName === '')
   )
-    return;
+    throw new Error('First name or last name must contain a value!');
 
   const db = await dbConn;
 
