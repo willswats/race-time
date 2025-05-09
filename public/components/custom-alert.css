@@ -8,7 +8,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #000000bf;
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 1;
 }
 
@@ -26,7 +26,7 @@
 #alert-content {
   display: flex;
   flex-direction: column;
-  background-color: #da5234;
+  background-color: #122634;
   width: 100%;
   overflow: hidden;
   border-radius: 1rem;
@@ -40,12 +40,12 @@
 #alert-content-buttons {
   display: flex;
   justify-content: flex-end;
-  background-color: #fff;
+  background-color: #254c68;
   padding: 0.5rem;
 }
 
 #alert-content-buttons button {
-  background-color: #da5234;
+  background-color: #122634;
   text-align: center;
   transition: background-color 0.1s;
   padding: 0.5rem;
@@ -58,5 +58,5 @@
 }
 
 #alert-content-buttons button:hover {
-  background-color: #bd5234ff;
+  background-color: #0f1f2b;
 }
