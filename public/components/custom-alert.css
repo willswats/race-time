@@ -1,3 +1,5 @@
+@import '../globals.css';
+
 #alert-overlay {
   position: fixed;
   width: 100%;
@@ -24,9 +26,37 @@
 #alert-content {
   display: flex;
   flex-direction: column;
-  border-radius: 25px;
-  background-color: #2c394e;
+  background-color: #da5234;
   width: 100%;
   overflow: hidden;
-  margin-top: 1rem;
+  border-radius: 1rem;
+}
+
+#alert-content p {
+  font-size: 1.2rem;
+  padding: 1rem;
+}
+
+#alert-content-buttons {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #fff;
+  padding: 0.5rem;
+}
+
+#alert-content-buttons button {
+  background-color: #da5234;
+  text-align: center;
+  transition: background-color 0.1s;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  border-radius: 1rem;
+}
+
+#alert-content-buttons button:first-child {
+  margin-right: 0.5rem;
+}
+
+#alert-content-buttons button:hover {
+  background-color: #bd5234ff;
 }

@@ -40,10 +40,16 @@ export class CustomAlert extends HTMLElement {
       this.hideAlert(false),
     );
 
-    this.alertSectionContent.append(
-      this.alertParagraph,
+    this.alertSectionContentButtons = document.createElement('section');
+    this.alertSectionContentButtons.id = 'alert-content-buttons';
+    this.alertSectionContentButtons.append(
       this.alertButtonCancel,
       this.alertButtonOk,
+    );
+
+    this.alertSectionContent.append(
+      this.alertParagraph,
+      this.alertSectionContentButtons,
     );
     this.alertSection.append(this.alertSectionContent);
 
