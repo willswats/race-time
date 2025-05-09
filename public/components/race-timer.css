@@ -76,7 +76,7 @@ button:hover {
   display: none !important;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 768px) {
   #timer {
     width: 100%;
     height: 100%;

@@ -12,3 +12,10 @@ select {
 select:hover {
   background-color: rgba(0, 0, 0, 0.75);
 }
+
+@media screen and (max-width: 768px) {
+  select {
+    font-size: 1rem;
+    padding: 0.25rem;
+  }
+}
