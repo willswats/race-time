@@ -1,4 +1,4 @@
-import { setSuccessColour, setErrorColour } from '../utils.js';
+import { setSuccessColour, setErrorColour, customAlert } from '../utils.js';
 
 export class RaceTimer extends HTMLElement {
   constructor() {
@@ -16,7 +16,7 @@ export class RaceTimer extends HTMLElement {
   }
 
   connectedCallback() {
-    const shadow = this.attachShadow({ mode: 'closed' });
+    this.shadow = this.attachShadow({ mode: 'closed' });
 
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
@@ -93,7 +93,7 @@ export class RaceTimer extends HTMLElement {
       this.olRaceResults,
     );
 
-    shadow.append(link, this.sectionTimer, this.sectionRaceResults);
+    this.shadow.append(link, this.sectionTimer, this.sectionRaceResults);
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
@@ -141,9 +141,10 @@ export class RaceTimer extends HTMLElement {
     this.paragraphFeedback.textContent = '';
   }
 
-  startTimerButton() {
+  async startTimerButton() {
     if (this.raceResults.length > 0) {
-      const confirm = window.confirm(
+      const confirm = await customAlert(
+        this.shadow,
         'Are you sure you want to start a new timer? This will clear your previous results',
       );
       if (confirm) {
@@ -176,8 +177,11 @@ export class RaceTimer extends HTMLElement {
     }
   }
 
-  stopTimerButton() {
-    const confirm = window.confirm('Are you sure you want to stop your time?');
+  async stopTimerButton() {
+    const confirm = await customAlert(
+      this.shadow,
+      'Are you sure you want to stop your time?',
+    );
     if (confirm) {
       this.stopTimer();
     }
@@ -219,8 +223,9 @@ export class RaceTimer extends HTMLElement {
     }
   }
 
-  submitTimeButton() {
-    const confirm = window.confirm(
+  async submitTimeButton() {
+    const confirm = await customAlert(
+      this.alert,
       'Are you sure you want to submit your results?',
     );
 

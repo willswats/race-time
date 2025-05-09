@@ -1,7 +1,8 @@
 export class CustomAlert extends HTMLElement {
   constructor() {
     super();
-    this.confirmed = false;
+    this._resolvePromise = null;
+    this._rejectPromise = null;
   }
 
   connectedCallback() {
@@ -16,7 +17,9 @@ export class CustomAlert extends HTMLElement {
     this.alertSectionOverlay = document.createElement('section');
     this.alertSectionOverlay.id = 'alert-overlay';
     this.alertSectionOverlay.hidden = true;
-    this.alertSectionOverlay.addEventListener('click', this.hideAlert);
+    this.alertSectionOverlay.addEventListener('click', () =>
+      this.hideAlert(false),
+    );
 
     this.alertSection = document.createElement('section');
     this.alertSection.id = 'alert';
@@ -29,11 +32,13 @@ export class CustomAlert extends HTMLElement {
 
     this.alertButtonOk = document.createElement('button');
     this.alertButtonOk.textContent = 'Ok';
-    this.alertButtonOk.addEventListener('click', this.confirmAlert);
+    this.alertButtonOk.addEventListener('click', () => this.confirmAlert(true));
 
     this.alertButtonCancel = document.createElement('button');
     this.alertButtonCancel.textContent = 'Cancel';
-    this.alertButtonCancel.addEventListener('click', this.hideAlert);
+    this.alertButtonCancel.addEventListener('click', () =>
+      this.hideAlert(false),
+    );
 
     this.alertSectionContent.append(
       this.alertParagraph,
@@ -45,19 +50,34 @@ export class CustomAlert extends HTMLElement {
     this.shadow.append(this.alertSectionOverlay, this.alertSection);
   }
 
-  confirmAlert() {
-    this.confirmed = true;
+  confirmAlert(confirmed) {
+    if (this._resolvePromise) {
+      this._resolvePromise(confirmed);
+      this._resolvePromise = null;
+      this._rejectPromise = null;
+    }
+    this.hideAlert();
+  }
+
+  hideAlert(confirmed = false) {
+    if (!confirmed && this._rejectPromise) {
+      this._rejectPromise(new Error('Alert dismissed'));
+      this._resolvePromise = null;
+      this._rejectPromise = null;
+    }
+    this.alertSection.hidden = true;
+    this.alertSectionOverlay.hidden = true;
   }
 
   showAlert(text) {
     this.alertSection.hidden = false;
     this.alertSectionOverlay.hidden = false;
     this.alertParagraph.textContent = text;
-  }
 
-  hideAlert() {
-    this.alertSection.hidden = true;
-    this.alertSectionOverlay.hidden = true;
+    return new Promise((resolve, reject) => {
+      this._resolvePromise = resolve;
+      this._rejectPromise = reject;
+    });
   }
 }
 

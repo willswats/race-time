@@ -4,6 +4,14 @@ export const ROLES = {
   ORGANISER: 'organiser',
 };
 
+export function showElement(e) {
+  e.classList.remove('hidden');
+}
+
+export function hideElement(e) {
+  e.classList.add('hidden');
+}
+
 export function setSuccessColour(e) {
   e.classList.remove('error');
   e.classList.add('success');
@@ -12,6 +20,13 @@ export function setSuccessColour(e) {
 export function setErrorColour(e) {
   e.classList.remove('success');
   e.classList.add('error');
+}
+
+export async function customAlert(appendEl, text) {
+  const customAlert = document.createElement('custom-alert');
+  appendEl.append(customAlert);
+  const alertResult = await customAlert.showAlert(text);
+  return alertResult;
 }
 
 export function getRoleDropDownValue() {

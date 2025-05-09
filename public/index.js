@@ -1,3 +1,5 @@
+import { showElement, hideElement } from './utils.js';
+
 const pages = [
   {
     screen: 'home',
@@ -141,14 +143,6 @@ function hideAllScreens() {
   for (const screen of ui.getScreens()) {
     hideElement(screen);
   }
-}
-
-function showElement(e) {
-  e.classList.remove('hidden');
-}
-
-function hideElement(e) {
-  e.classList.add('hidden');
 }
 
 function readPath() {
