@@ -2,12 +2,21 @@
 
 h1 {
   color: #fff;
-  margin: 0;
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
 }
 
 ol {
   color: #fff;
   font-size: 1.2rem;
+}
+
+li {
+  margin-bottom: 0.25rem;
+}
+
+li:last-child {
+  margin-bottom: 0;
 }
 
 button {
@@ -30,12 +39,20 @@ section {
   padding: 2rem;
 }
 
+section:last-child {
+  margin-bottom: 0;
+}
+
 @media screen and (max-width: 800px) {
   h1 {
     font-size: 1.2rem;
   }
 
   ol {
+    font-size: 1rem;
+  }
+
+  button {
     font-size: 1rem;
   }
 
