@@ -225,7 +225,7 @@ export class RaceTimer extends HTMLElement {
 
   async submitTimeButton() {
     const confirm = await customAlert(
-      this.alert,
+      this.shadow,
       'Are you sure you want to submit your results?',
     );
 
