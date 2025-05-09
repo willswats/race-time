@@ -148,7 +148,6 @@ export class RaceTimer extends HTMLElement {
   async startTimerButton() {
     if (this.raceResults.length > 0) {
       const confirm = await customAlert(
-        this.shadow,
         'Are you sure you want to start a new timer? This will clear your previous results',
       );
       if (confirm) {
@@ -183,7 +182,6 @@ export class RaceTimer extends HTMLElement {
 
   async stopTimerButton() {
     const confirm = await customAlert(
-      this.shadow,
       'Are you sure you want to stop your time?',
     );
     if (confirm) {
@@ -229,7 +227,6 @@ export class RaceTimer extends HTMLElement {
 
   async submitTimeButton() {
     const confirm = await customAlert(
-      this.shadow,
       'Are you sure you want to submit your results?',
     );
 

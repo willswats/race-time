@@ -22,16 +22,10 @@ export function setErrorColour(e) {
   e.classList.add('error');
 }
 
-export async function customAlert(appendEl, text) {
-  const customAlert = document.createElement('custom-alert');
-  appendEl.append(customAlert);
-  try {
-    const alertResult = await customAlert.showAlert(text);
-    appendEl.removeChild(customAlert);
-    return alertResult;
-  } catch (e) {
-    appendEl.removeChild(customAlert);
-  }
+export async function customAlert(text) {
+  const customAlert = document.querySelector('custom-alert');
+  const alertResult = await customAlert.showAlert(text);
+  return alertResult;
 }
 
 export function getRoleDropDownValue() {
