@@ -15,54 +15,58 @@ export class RaceRecord extends HTMLElement {
     link.setAttribute('type', 'text/css');
     link.setAttribute('href', import.meta.resolve('./race-record.css'));
 
-    this.buttonRecordTimer = document.createElement('button');
-    this.buttonRecordTimer.textContent = 'Record';
+    this.buttonClearRaceResults = document.createElement('button');
+    this.buttonClearRaceResults.textContent = 'Clear';
+    this.buttonClearRaceResults.hidden = true;
 
-    this.buttonSubmitTime = document.createElement('button');
-    this.buttonSubmitTime.textContent = 'Submit';
-    this.buttonSubmitTime.hidden = true;
+    this.buttonSubmitResults = document.createElement('button');
+    this.buttonSubmitResults.textContent = 'Submit';
+    this.buttonSubmitResults.hidden = true;
 
-    this.buttonRecordTimer.addEventListener(
+    this.buttonRecordTime = document.createElement('button');
+    this.buttonRecordTime.textContent = 'Record';
+
+    this.buttonClearRaceResults.addEventListener(
+      'click',
+      this.clearRaceResultsButton.bind(this),
+    );
+    this.buttonRecordTime.addEventListener(
       'click',
       this.recordTimerButton.bind(this),
     );
-    this.buttonSubmitTime.addEventListener(
+    this.buttonSubmitResults.addEventListener(
       'click',
       this.submitTimeButton.bind(this),
     );
 
     this.olRaceResults = document.createElement('ol');
-    this.olRaceResults.hidden = true;
     this.olRaceResults.reversed = true;
 
     this.sectionRaceResultsButtons = document.createElement('section');
     this.sectionRaceResultsButtons.id = 'timer-results-buttons';
     this.sectionRaceResultsButtons.append(
-      this.buttonRecordTimer,
-      this.buttonSubmitTime,
+      this.buttonSubmitResults,
+      this.buttonClearRaceResults,
     );
 
     this.paragraphFeedback = document.createElement('p');
 
-    this.sectionRaceResultsList = document.createElement('section');
-    this.sectionRaceResultsList.id = 'timer-results-list';
-    this.sectionRaceResultsList.append(
+    this.sectionRaceResults = document.createElement('section');
+    this.sectionRaceResults.id = 'timer-results';
+    this.sectionRaceResults.append(
       this.sectionRaceResultsButtons,
       this.paragraphFeedback,
       this.olRaceResults,
+      this.buttonRecordTime,
     );
-
-    this.sectionRaceResults = document.createElement('section');
-    this.sectionRaceResults.id = 'timer-results';
-    this.sectionRaceResults.append(this.sectionRaceResultsList);
 
     this.shadow.append(link, this.sectionRaceResults);
   }
 
   recordTimerButton() {
     if (this.timer.timePassed > 0) {
-      this.buttonSubmitTime.hidden = false;
-      this.olRaceResults.hidden = false;
+      this.buttonClearRaceResults.hidden = false;
+      this.buttonSubmitResults.hidden = false;
       this.paragraphFeedback.textContent = '';
 
       // unshift instead of append so that race results can appear at the top of the ordered list
@@ -90,11 +94,21 @@ export class RaceRecord extends HTMLElement {
   }
 
   clearRaceResults() {
-    this.buttonSubmitTime.hidden = true;
-    this.olRaceResults.hidden = true;
+    this.buttonClearRaceResults.hidden = true;
+    this.buttonSubmitResults.hidden = true;
 
     this.raceResults = [];
     this.olRaceResults.replaceChildren();
+  }
+
+  async clearRaceResultsButton() {
+    const confirm = await customAlert(
+      'Are you sure you want to clear your results?',
+    );
+
+    if (confirm) {
+      this.clearRaceResults();
+    }
   }
 
   async submitTime() {

@@ -46,8 +46,6 @@ export class RaceResult extends HTMLElement {
     this.shadow.append(this.form);
 
     await this.setRaceResult();
-
-    this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
 
   async setRaceResult() {

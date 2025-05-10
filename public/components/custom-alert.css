@@ -33,7 +33,7 @@
 }
 
 #alert-content p {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   padding: 1rem;
 }
 
@@ -48,7 +48,7 @@
   background-color: #122634;
   text-align: center;
   transition: background-color 0.1s;
-  padding: 0.5rem;
+  padding: 1rem;
   font-size: 1.2rem;
   border-radius: 1rem;
 }
@@ -59,4 +59,15 @@
 
 #alert-content-buttons button:hover {
   background-color: #0f1f2b;
+}
+
+@media screen and (max-width: 768px) {
+  #alert-content p {
+    font-size: 1.2rem;
+  }
+
+  #alert-content-buttons button {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
 }

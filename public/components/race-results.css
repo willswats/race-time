@@ -1,8 +1,22 @@
 @import '/globals.css';
 
+section {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  padding: 2rem 4rem;
+  width: 44rem;
+}
+
+section:last-child {
+  margin-bottom: 0;
+}
+
 h1 {
   color: #fff;
-  font-size: 2rem;
+  font-size: 3rem;
   margin-bottom: 0.25rem;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 1rem;
@@ -11,7 +25,7 @@ h1 {
 
 h2 {
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 2rem;
   margin-bottom: 0.25rem;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 1rem;
@@ -20,10 +34,13 @@ h2 {
 
 ol {
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 2rem;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 1rem;
   border-radius: 1rem;
+  width: 100%;
+  max-height: 15rem;
+  overflow: scroll;
 }
 
 li {
@@ -35,7 +52,7 @@ li:last-child {
 }
 
 button {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   text-decoration: underline;
 }
 
@@ -43,41 +60,28 @@ button:hover {
   color: #a0b1bd;
 }
 
-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-  padding: 2rem 4rem;
-}
-
-section:last-child {
-  margin-bottom: 0;
-}
-
 @media screen and (max-width: 768px) {
   h1 {
-    font-size: 1.2rem;
+    font-size: 2rem;
   }
 
   h2 {
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     margin-bottom: 0.25rem;
   }
 
   ol {
-    font-size: 1rem;
+    font-size: 1.5rem;
   }
 
   button {
-    font-size: 1rem;
+    font-size: 1.5rem;
   }
 
   section {
+    width: 22rem;
+    height: 22rem;
     padding: 1rem;
   }
 }

@@ -16,8 +16,6 @@ export class RaceResults extends HTMLElement {
     this.shadow.append(link);
 
     await this.addRaceSections();
-
-    this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
 
   async addRaceSections() {
