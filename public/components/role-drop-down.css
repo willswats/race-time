@@ -1,4 +1,4 @@
-@import '../globals.css';
+@import '/globals.css';
 
 select {
   background-color: rgba(0, 0, 0, 0.5);

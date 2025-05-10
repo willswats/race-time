@@ -23,9 +23,13 @@ export function setErrorColour(e) {
 }
 
 export async function customAlert(text) {
-  const customAlert = document.querySelector('custom-alert');
-  const alertResult = await customAlert.showAlert(text);
-  return alertResult;
+  try {
+    const customAlert = document.querySelector('custom-alert');
+    const alertResult = await customAlert.showAlert(text);
+    return alertResult;
+  } catch (e) {
+    return false;
+  }
 }
 
 export function getRoleDropDownValue() {

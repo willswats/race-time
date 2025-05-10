@@ -1,4 +1,4 @@
-import { setSuccessColour, setErrorColour, customAlert } from '../utils.js';
+import { customAlert } from '../utils.js';
 
 export class RaceTimer extends HTMLElement {
   constructor() {
@@ -11,8 +11,6 @@ export class RaceTimer extends HTMLElement {
     this.seconds = 0;
     this.milliseconds = 0;
     this.timeString = '00:00:00';
-
-    this.raceResults = [];
   }
 
   connectedCallback() {
@@ -29,32 +27,14 @@ export class RaceTimer extends HTMLElement {
     this.buttonStartTimer = document.createElement('button');
     this.buttonStartTimer.textContent = 'Start';
 
-    this.buttonRecordTimer = document.createElement('button');
-    this.buttonRecordTimer.textContent = 'Record';
-
     this.buttonStopTimer = document.createElement('button');
     this.buttonStopTimer.textContent = 'Stop';
     this.buttonStopTimer.hidden = true;
 
-    this.buttonSubmitTime = document.createElement('button');
-    this.buttonSubmitTime.textContent = 'Submit';
-    this.buttonSubmitTime.hidden = true;
-
-    this.buttonStartTimer.addEventListener(
-      'click',
-      this.startTimerButton.bind(this),
-    );
-    this.buttonRecordTimer.addEventListener(
-      'click',
-      this.recordTimerButton.bind(this),
-    );
+    this.buttonStartTimer.addEventListener('click', this.startTimer.bind(this));
     this.buttonStopTimer.addEventListener(
       'click',
       this.stopTimerButton.bind(this),
-    );
-    this.buttonSubmitTime.addEventListener(
-      'click',
-      this.submitTimeButton.bind(this),
     );
 
     this.sectionTimerTime = document.createElement('section');
@@ -72,32 +52,7 @@ export class RaceTimer extends HTMLElement {
     this.sectionTimer.id = 'timer';
     this.sectionTimer.append(this.sectionTimerTime, this.sectionTimerButtons);
 
-    this.olRaceResults = document.createElement('ol');
-    this.olRaceResults.reversed = true;
-
-    this.sectionRaceResultsButtons = document.createElement('section');
-    this.sectionRaceResultsButtons.id = 'timer-results-buttons';
-    this.sectionRaceResultsButtons.append(
-      this.buttonRecordTimer,
-      this.buttonSubmitTime,
-    );
-
-    this.paragraphFeedback = document.createElement('p');
-
-    this.sectionRaceResultsList = document.createElement('section');
-    this.sectionRaceResultsList.id = 'timer-results-list';
-    this.sectionRaceResultsList.append(
-      this.sectionRaceResultsButtons,
-      this.paragraphFeedback,
-      this.olRaceResults,
-    );
-
-    this.sectionRaceResults = document.createElement('section');
-    this.sectionRaceResults.hidden = true;
-    this.sectionRaceResults.id = 'timer-results';
-    this.sectionRaceResults.append(this.sectionRaceResultsList);
-
-    this.shadow.append(link, this.sectionTimer, this.sectionRaceResults);
+    this.shadow.append(link, this.sectionTimer);
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
@@ -139,60 +94,12 @@ export class RaceTimer extends HTMLElement {
     this.startDate = Date.now();
     this.buttonStartTimer.hidden = true;
     this.buttonStopTimer.hidden = false;
-    this.buttonRecordTimer.hidden = false;
-    this.buttonSubmitTime.hidden = true;
-    this.sectionRaceResults.hidden = false;
-    this.paragraphFeedback.textContent = '';
-  }
-
-  async startTimerButton() {
-    if (this.raceResults.length > 0) {
-      const confirm = await customAlert(
-        'Are you sure you want to start a new timer? This will clear your previous results',
-      );
-      if (confirm) {
-        this.clearRaceResults();
-        this.startTimer();
-      }
-      return;
-    }
-    this.startTimer();
-  }
-
-  recordTimerButton() {
-    // unshift instead of append so that race results can appear at the top of the ordered list
-    this.raceResults.unshift(this.timeString);
-
-    const record = document.createElement('li');
-    record.textContent = this.timeString;
-    this.olRaceResults.prepend(record);
   }
 
   stopTimer() {
     this.startDate = null;
     this.buttonStartTimer.hidden = false;
-    this.buttonSubmitTime.hidden = false;
     this.buttonStopTimer.hidden = true;
-    this.buttonRecordTimer.hidden = true;
-
-    if (this.raceResults.length <= 0) {
-      this.sectionRaceResults.hidden = true;
-    }
-  }
-
-  async stopTimerButton() {
-    const confirm = await customAlert(
-      'Are you sure you want to stop your time?',
-    );
-    if (confirm) {
-      this.stopTimer();
-    }
-  }
-
-  clearRaceResults() {
-    this.raceResults = [];
-    this.olRaceResults.replaceChildren();
-    this.sectionRaceResults.hidden = true;
   }
 
   resetTimer() {
@@ -204,34 +111,11 @@ export class RaceTimer extends HTMLElement {
     this.hours = 0;
   }
 
-  async submitTime() {
-    // reverse the race results as unshift was used and not append
-    const payload = { raceResults: this.raceResults.reverse() };
-
-    const response = await fetch('/api/v1/race-results', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
-    if (response.ok) {
-      setSuccessColour(this.paragraphFeedback);
-      this.paragraphFeedback.textContent = 'Successfully submitted!';
-    } else {
-      setErrorColour(this.paragraphFeedback);
-      this.paragraphFeedback.textContent =
-        'Failed to send message (check console)!';
-      console.log('Failed to send message', response);
-    }
-  }
-
-  async submitTimeButton() {
+  async stopTimerButton() {
     const confirm = await customAlert(
-      'Are you sure you want to submit your results?',
+      'Are you sure you want to stop the timer?',
     );
-
     if (confirm) {
-      this.submitTime();
       this.stopTimer();
     }
   }

@@ -6,6 +6,10 @@ const pages = [
     title: 'Home',
   },
   {
+    screen: 'race-record',
+    title: 'Race Record',
+  },
+  {
     screen: 'race-results',
     title: 'Race Results',
   },

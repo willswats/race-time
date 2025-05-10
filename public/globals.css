@@ -77,6 +77,11 @@ input[type='range']::-moz-range-thumb {
   background-color: var(--text-color);
 }
 
+/* Make hidden work with flexbox https://stackoverflow.com/questions/23772673/hidden-property-does-not-work-with-flex-box */
+[hidden] {
+  display: none !important;
+}
+
 .hidden {
   display: none;
 }
