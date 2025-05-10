@@ -141,7 +141,7 @@ function addEventListenersChangeContent(element, eventType) {
 
 // For buttons that require a content refresh
 export function addEventListenersChangeContentRefresh(element, eventType) {
-  element.addEventListener(eventType, refreshContent);
+  element.addEventListener(eventType, refreshEventScreen);
   addEventListenersChangeContent(element, eventType);
 }
 
@@ -167,7 +167,7 @@ function refreshScreen(screen) {
   buildScreen(templates.screen, screen);
 }
 
-function refreshContent(event) {
+function refreshEventScreen(event) {
   const screen = event?.target?.dataset?.screen;
   if (screen) {
     refreshScreen(screen);
@@ -176,6 +176,7 @@ function refreshContent(event) {
 
 export function refreshCurrentScreen() {
   refreshScreen(ui.current);
+  loadScreen();
 }
 
 function show(event) {
