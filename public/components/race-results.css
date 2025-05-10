@@ -72,16 +72,17 @@ button:hover {
   }
 
   ol {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+
+    max-height: 10rem;
   }
 
   button {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
 
   section {
-    width: 22rem;
-    height: 22rem;
+    width: 18rem;
     padding: 1rem;
   }
 }

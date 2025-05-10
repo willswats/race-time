@@ -7,19 +7,19 @@ const pages = [
   },
   {
     screen: 'race-timer',
-    title: 'Race Timer',
+    title: 'Timer',
   },
   {
     screen: 'race-record',
-    title: 'Race Record',
+    title: 'Record',
   },
   {
     screen: 'race-results',
-    title: 'Race Results',
+    title: 'Results',
   },
   {
     screen: 'race-result',
-    title: 'Race Result',
+    title: 'Result',
   },
   {
     screen: 'error',
@@ -35,17 +35,17 @@ const navContents = [
   },
   {
     screen: 'race-timer',
-    title: 'Race Timer',
+    title: 'Timer',
     roles: [ROLES.ORGANISER],
   },
   {
     screen: 'race-record',
-    title: 'Race Record',
+    title: 'Record',
     roles: [ROLES.ORGANISER, ROLES.MARSHAL],
   },
   {
     screen: 'race-results',
-    title: 'Race Results',
+    title: 'Results',
     roles: [ROLES.ORGANISER, ROLES.MARSHAL, ROLES.RUNNER],
   },
 ];
