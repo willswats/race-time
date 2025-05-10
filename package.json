@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node --watch app.js"
+    "start": "node --watch app.js",
+    "config": ""
   },
   "author": "",
   "license": "MIT",
