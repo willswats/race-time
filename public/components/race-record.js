@@ -113,7 +113,6 @@ export class RaceRecord extends HTMLElement {
     const confirm = await customAlert(
       'Are you sure you want to clear your results?',
     );
-    console.log(confirm);
 
     if (confirm) {
       this.clearRaceResults();
