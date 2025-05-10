@@ -31,6 +31,7 @@ const CACHEABLE = [
   './index.html',
   './index.js',
   './index.css',
+  './home.css',
   './globals.css',
   './manifest.json',
   './components/race-timer.js',
@@ -39,6 +40,12 @@ const CACHEABLE = [
   './components/race-results.css',
   './components/race-result.js',
   './components/race-result.css',
+  './components/race-record.js',
+  './components/race-record.css',
+  './components/role-drop-down.js',
+  './components/role-drop-down.css',
+  './components/custom-alert.js',
+  './components/custom-alert.css',
 ];
 
 /* Prepare and populate a cache. */
