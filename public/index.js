@@ -4,26 +4,32 @@ const pages = [
   {
     screen: 'home',
     title: 'Home',
+    refresh: false,
   },
   {
     screen: 'race-timer',
     title: 'Timer',
+    refresh: false,
   },
   {
     screen: 'race-record',
     title: 'Record',
+    refresh: false,
   },
   {
     screen: 'race-results',
     title: 'Results',
+    refresh: true,
   },
   {
     screen: 'race-result',
     title: 'Result',
+    refresh: true,
   },
   {
     screen: 'error',
     title: 'Error',
+    refresh: false,
   },
 ];
 
@@ -148,24 +154,28 @@ export function refreshNav() {
 // Remove element from <main>
 // Delete the element in ui.screens
 // Refresh the screen by running getContent and buildScreen for it
+function refreshScreen(screen) {
+  for (const page of pages) {
+    if (screen === page.screen && page.refresh === false) {
+      return;
+    }
+  }
+  ui.main.removeChild(ui.screens[screen]);
+  delete ui.screens[screen];
+
+  getContent(screen);
+  buildScreen(templates.screen, screen);
+}
+
 function refreshContent(event) {
   const screen = event?.target?.dataset?.screen;
   if (screen) {
-    ui.main.removeChild(ui.screens[screen]);
-    delete ui.screens[screen];
-
-    getContent(screen);
-    buildScreen(templates.screen, screen);
+    refreshScreen(screen);
   }
 }
 
 export function refreshCurrentScreen() {
-  ui.main.removeChild(ui.screens[ui.current]);
-  delete ui.screens[ui.current];
-
-  getContent(ui.current);
-  buildScreen(templates.screen, ui.current);
-  showScreen(ui.current);
+  refreshScreen(ui.current);
 }
 
 function show(event) {
