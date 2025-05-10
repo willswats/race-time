@@ -1,0 +1,28 @@
+#home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+#home h1 {
+  font-size: 3rem;
+}
+
+#home p {
+  font-size: 1.2rem;
+}
+
+@media screen and (max-width: 768px) {
+  #home h1 {
+    font-size: 2rem;
+  }
+
+  #home p {
+    font-size: 1rem;
+  }
+}
