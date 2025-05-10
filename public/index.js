@@ -23,6 +23,21 @@ const pages = [
   },
 ];
 
+const navContents = [
+  {
+    screen: 'home',
+    title: 'Home',
+  },
+  {
+    screen: 'race-record',
+    title: 'Race Record',
+  },
+  {
+    screen: 'race-results',
+    title: 'Race Results',
+  },
+];
+
 const ui = {};
 const templates = {};
 
@@ -54,14 +69,17 @@ function buildScreens() {
 
 // Add event listeners to nav buttons
 function setupNavButtons() {
-  const buttons = ui.nav.querySelectorAll('button');
-  for (const button of buttons) {
+  for (const navContent of navContents) {
+    const button = document.createElement('button');
+    button.textContent = navContent.title;
+    button.dataset.screen = navContent.screen;
     if (button.dataset.screen === 'race-results') {
       // The race-results button needs to be able to refresh its data in case a user submits new data
       addEventListenersChangeContentButtonRefresh(button);
     } else {
       addEventListenersChangeContentButton(button);
     }
+    ui.nav.append(button);
   }
 }
 
