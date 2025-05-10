@@ -159,6 +159,15 @@ function refreshContent(event) {
   }
 }
 
+export function refreshCurrentScreen() {
+  ui.main.removeChild(ui.screens[ui.current]);
+  delete ui.screens[ui.current];
+
+  getContent(ui.current);
+  buildScreen(templates.screen, ui.current);
+  showScreen(ui.current);
+}
+
 function show(event) {
   const screen = event?.target?.dataset?.screen ?? 'home';
   showScreen(screen);

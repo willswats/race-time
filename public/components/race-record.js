@@ -130,10 +130,13 @@ export class RaceRecord extends HTMLElement {
     if (response.ok) {
       setSuccessColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Successfully submitted!';
+    } else if (response.status === 403) {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent =
+        "You role doesn't have permission to perform this action!";
     } else {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Failed to send message!';
-      console.log('Failed to send message', response);
     }
   }
 }

@@ -1,4 +1,10 @@
-import { setSuccessColour, setErrorColour, getUserId } from '../utils.js';
+import {
+  setSuccessColour,
+  setErrorColour,
+  getUserId,
+  getUserRole,
+  ROLES,
+} from '../utils.js';
 
 export class RaceResult extends HTMLElement {
   async connectedCallback() {
@@ -33,6 +39,12 @@ export class RaceResult extends HTMLElement {
     this.form.addEventListener('submit', (event) =>
       this.submitRaceResultNames(event),
     );
+
+    if (getUserRole() === ROLES.RUNNER) {
+      this.buttonSubmit.hidden = true;
+      this.inputFirstName.disabled = true;
+      this.inputLastName.disabled = true;
+    }
 
     this.form.append(
       this.labelFirstName,
@@ -97,10 +109,13 @@ export class RaceResult extends HTMLElement {
     if (response.ok) {
       setSuccessColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Successfully submitted!';
+    } else if (response.status === 403) {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent =
+        "You role doesn't have permission to perform this action!";
     } else {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Failed to send message!';
-      console.log('failed to send message', response);
     }
   }
 }
