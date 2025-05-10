@@ -1,4 +1,4 @@
-import { ROLES } from '../utils.js';
+import { ROLES, USERS } from '../utils.js';
 
 export class RoleDropDown extends HTMLElement {
   constructor() {
@@ -15,7 +15,7 @@ export class RoleDropDown extends HTMLElement {
     link.setAttribute('href', import.meta.resolve('./role-drop-down.css'));
 
     this.select = document.createElement('select');
-    this.select.addEventListener('change', this.changeUI);
+    this.select.addEventListener('change', this.changeUI.bind(this));
 
     this.optionOne = document.createElement('option');
     this.optionOne.value = ROLES.RUNNER;
@@ -34,12 +34,21 @@ export class RoleDropDown extends HTMLElement {
     shadow.append(link, this.select);
   }
 
-  getCurrentValue() {
-    return this.select.value;
+  async changeUI() {
+    console.log(this.select.value);
+    const user = await this.getUser(USERS.ORGANISER);
+    console.log(user);
   }
 
-  changeUI() {
-    console.log('change');
+  async getUser(userId) {
+    const response = await fetch(`/api/v1/user?userId=${userId}`);
+
+    if (response.ok) {
+      const user = await response.json();
+      return user;
+    } else {
+      console.log('failed to send message', response);
+    }
   }
 }
 

@@ -9,6 +9,8 @@ import {
   updateRaceResultNames,
 } from './api/v1/race-results.js';
 
+import { getUser } from './api/v1/users.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -47,6 +49,11 @@ async function apiAddRaceResults(req, res, next) {
   }
 }
 
+async function apiGetUser(req, res) {
+  const user = await getUser(req.query.userId);
+  res.json(user);
+}
+
 function notFound(_, res) {
   res.status(404).sendFile(`${__dirname}/server-error-pages/404.html`);
 }
@@ -59,6 +66,8 @@ app.patch('/api/v1/race-result', express.json(), apiUpdateRaceResultNames);
 
 app.get('/api/v1/race-results', apiGetAllRaceResults);
 app.post('/api/v1/race-results', express.json(), apiAddRaceResults);
+
+app.get('/api/v1/user', apiGetUser);
 
 app.all('*', notFound);
 
