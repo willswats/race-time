@@ -113,6 +113,7 @@ export class RaceRecord extends HTMLElement {
     const confirm = await customAlert(
       'Are you sure you want to clear your results?',
     );
+    console.log(confirm);
 
     if (confirm) {
       this.clearRaceResults();
@@ -122,7 +123,7 @@ export class RaceRecord extends HTMLElement {
   async submitTime() {
     // reverse the race results as unshift was used and not append
     const payload = { raceResults: this.raceResults.reverse() };
-    const userId = await getUserId();
+    const userId = getUserId();
 
     const response = await fetch(`/api/v1/race-results?userId=${userId}`, {
       method: 'POST',

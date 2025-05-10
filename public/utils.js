@@ -60,13 +60,19 @@ export async function customAlert(text) {
 }
 
 export function getUserId() {
-  const roleDropDown = document.querySelector('role-drop-down');
-  const id = roleDropDown.getUser();
-  return id;
+  let userId = localStorage.getItem('userId');
+  if (userId === null) {
+    localStorage.setItem('userId', USERS.RUNNER);
+    userId = USERS.RUNNER;
+  }
+  return userId;
 }
 
 export function getUserRole() {
-  const roleDropDown = document.querySelector('role-drop-down');
-  const role = roleDropDown.getRole();
-  return role;
+  let userRole = localStorage.getItem('userRole');
+  if (userRole === null) {
+    localStorage.setItem('userRole', ROLES.RUNNER);
+    userRole = ROLES.RUNNER;
+  }
+  return userRole;
 }

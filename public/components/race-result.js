@@ -100,7 +100,7 @@ export class RaceResult extends HTMLElement {
     }
 
     const payload = { raceResultId, raceResultFirstName, raceResultLastName };
-    const userId = await getUserId();
+    const userId = getUserId();
 
     const response = await fetch(`/api/v1/race-result?userId=${userId}`, {
       method: 'PATCH',

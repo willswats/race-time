@@ -1,20 +1,26 @@
 import { refreshNav, refreshCurrentScreen } from '../index.js';
 
-import { ROLES, USERS } from '../utils.js';
+import {
+  ROLES,
+  USERS,
+  loadStyleSheet,
+  loadGlobalStyleSheet,
+} from '../utils.js';
 
 export class RoleDropDown extends HTMLElement {
-  connectedCallback() {
-    const shadow = this.attachShadow({ mode: 'closed' });
+  async connectedCallback() {
+    this.shadow = this.attachShadow({ mode: 'closed' });
 
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', import.meta.resolve('./role-drop-down.css'));
+    const globalSheet = await loadGlobalStyleSheet();
+    const sheet = await loadStyleSheet(
+      import.meta.resolve('./role-drop-down.css'),
+    );
+    this.shadow.adoptedStyleSheets = [globalSheet, sheet];
 
     this.section = document.createElement('section');
 
     this.select = document.createElement('select');
-    this.select.addEventListener('change', this.setUser.bind(this));
+    this.select.addEventListener('change', this.setRole.bind(this));
     this.select.addEventListener('change', refreshNav);
     this.select.addEventListener('change', refreshCurrentScreen);
 
@@ -30,32 +36,42 @@ export class RoleDropDown extends HTMLElement {
     this.optionThree.value = ROLES.ORGANISER;
     this.optionThree.textContent = 'Organiser';
 
-    this.user = USERS.RUNNER;
+    this.setSelected();
 
     this.select.append(this.optionOne, this.optionTwo, this.optionThree);
     this.section.append(this.select);
 
-    shadow.append(link, this.select);
+    this.shadow.append(this.select);
   }
 
-  getRole() {
-    return this.select.value;
-  }
-
-  getUser() {
-    return this.user;
-  }
-
-  setUser() {
-    switch (this.select.value) {
+  setSelected() {
+    const role = localStorage.getItem('userRole');
+    switch (role) {
       case ROLES.ORGANISER:
-        this.user = USERS.ORGANISER;
+        this.optionThree.selected = true;
         break;
       case ROLES.MARSHAL:
-        this.user = USERS.MARSHAL;
+        this.optionTwo.selected = true;
         break;
       case ROLES.RUNNER:
-        this.user = USERS.RUNNER;
+        this.optionOne.selected = true;
+        break;
+    }
+  }
+
+  setRole() {
+    switch (this.select.value) {
+      case ROLES.ORGANISER:
+        localStorage.setItem('userId', USERS.ORGANISER);
+        localStorage.setItem('userRole', ROLES.ORGANISER);
+        break;
+      case ROLES.MARSHAL:
+        localStorage.setItem('userId', USERS.MARSHAL);
+        localStorage.setItem('userRole', ROLES.MARSHAL);
+        break;
+      case ROLES.RUNNER:
+        localStorage.setItem('userId', USERS.RUNNER);
+        localStorage.setItem('userRole', ROLES.RUNNER);
         break;
     }
   }
