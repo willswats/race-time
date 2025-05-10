@@ -11,6 +11,8 @@ export class RoleDropDown extends HTMLElement {
     link.setAttribute('type', 'text/css');
     link.setAttribute('href', import.meta.resolve('./role-drop-down.css'));
 
+    this.section = document.createElement('section');
+
     this.select = document.createElement('select');
     this.select.addEventListener('change', this.setUser.bind(this));
     this.select.addEventListener('change', refreshNav);
@@ -31,6 +33,7 @@ export class RoleDropDown extends HTMLElement {
     this.user = USERS.RUNNER;
 
     this.select.append(this.optionOne, this.optionTwo, this.optionThree);
+    this.section.append(this.select);
 
     shadow.append(link, this.select);
   }
