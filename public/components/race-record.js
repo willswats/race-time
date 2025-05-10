@@ -101,8 +101,7 @@ export class RaceRecord extends HTMLElement {
       this.paragraphFeedback.textContent = 'Successfully submitted!';
     } else {
       setErrorColour(this.paragraphFeedback);
-      this.paragraphFeedback.textContent =
-        'Failed to send message (check console)!';
+      this.paragraphFeedback.textContent = 'Failed to send message!';
       console.log('Failed to send message', response);
     }
   }

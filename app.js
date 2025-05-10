@@ -20,13 +20,17 @@ async function apiGetRaceResult(req, res) {
   res.json(raceResult);
 }
 
-async function apiUpdateRaceResultNames(req, res) {
-  const updatedRaceResult = await updateRaceResultNames(
-    req.body.raceResultId,
-    req.body.raceResultFirstName,
-    req.body.raceResultLastName,
-  );
-  res.json(updatedRaceResult);
+async function apiUpdateRaceResultNames(req, res, next) {
+  try {
+    const updatedRaceResult = await updateRaceResultNames(
+      req.body.raceResultId,
+      req.body.raceResultFirstName,
+      req.body.raceResultLastName,
+    );
+    res.json(updatedRaceResult);
+  } catch (error) {
+    next(error);
+  }
 }
 
 async function apiGetAllRaceResults(_, res) {
@@ -34,9 +38,13 @@ async function apiGetAllRaceResults(_, res) {
   res.json(allRaceResults);
 }
 
-async function apiAddRaceResults(req, res) {
-  const newRaceResults = await addRaceResults(req.body.raceResults);
-  res.json(newRaceResults);
+async function apiAddRaceResults(req, res, next) {
+  try {
+    const newRaceResults = await addRaceResults(req.body.raceResults);
+    res.json(newRaceResults);
+  } catch (error) {
+    next(error);
+  }
 }
 
 function notFound(_, res) {
@@ -48,8 +56,10 @@ app.use('/app/*', express.static(join(__dirname, 'public/index.html')));
 
 app.get('/api/v1/race-result', apiGetRaceResult);
 app.patch('/api/v1/race-result', express.json(), apiUpdateRaceResultNames);
+
 app.get('/api/v1/race-results', apiGetAllRaceResults);
 app.post('/api/v1/race-results', express.json(), apiAddRaceResults);
+
 app.all('*', notFound);
 
 app.listen(port, () => {

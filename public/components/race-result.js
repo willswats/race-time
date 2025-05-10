@@ -90,11 +90,6 @@ export class RaceResult extends HTMLElement {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Invalid race result id!';
       return;
-    } else if (raceResultFirstName === '' && raceResultLastName === '') {
-      setErrorColour(this.paragraphFeedback);
-      this.paragraphFeedback.textContent =
-        'First name or last name must contain a value!';
-      return;
     }
 
     const payload = { raceResultId, raceResultFirstName, raceResultLastName };
@@ -110,8 +105,7 @@ export class RaceResult extends HTMLElement {
       this.paragraphFeedback.textContent = 'Successfully submitted!';
     } else {
       setErrorColour(this.paragraphFeedback);
-      this.paragraphFeedback.textContent =
-        'Failed to send message (check console)!';
+      this.paragraphFeedback.textContent = 'Failed to send message!';
       console.log('failed to send message', response);
     }
   }

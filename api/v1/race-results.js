@@ -55,7 +55,8 @@ export async function getAllRaceResults() {
 }
 
 export async function addRaceResults(raceResults) {
-  if (raceResults.length === 0) return raceResults;
+  if (raceResults.length === 0)
+    throw new Error('Must submit at least one race result!');
 
   const db = await dbConn;
   const raceResultsTime = new Date().toISOString();
@@ -87,11 +88,7 @@ export async function updateRaceResultNames(
 ) {
   if (raceResultId === null) {
     throw new Error('Invalid race result id!');
-  } else if (
-    raceResultId === null ||
-    (raceResultFirstName.length === '' && raceResultLastName === '')
-  )
-    throw new Error('First name or last name must contain a value!');
+  }
 
   const db = await dbConn;
 
