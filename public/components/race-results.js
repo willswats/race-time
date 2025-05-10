@@ -61,7 +61,7 @@ export class RaceResults extends HTMLElement {
       this.shadow.append(raceSection);
     }
 
-    if (this.raceSections.length >= 0) {
+    if (this.raceSections.length > 0) {
       this.placeHolderSection.hidden = true;
     }
   }
