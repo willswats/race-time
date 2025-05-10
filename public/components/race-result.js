@@ -87,7 +87,6 @@ export class RaceResult extends HTMLElement {
 
   async submitRaceResultNames(event) {
     event.preventDefault();
-    console.log(event);
 
     const raceResultId = this.raceResultId;
     const raceResultFirstName = this.inputFirstName.value;
