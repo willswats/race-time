@@ -1,4 +1,4 @@
-import { setSuccessColour, setErrorColour } from '../utils.js';
+import { setSuccessColour, setErrorColour, getUser } from '../utils.js';
 
 export class RaceResult extends HTMLElement {
   async connectedCallback() {
@@ -85,8 +85,9 @@ export class RaceResult extends HTMLElement {
     }
 
     const payload = { raceResultId, raceResultFirstName, raceResultLastName };
+    const user = getUser();
 
-    const response = await fetch('/api/v1/race-result', {
+    const response = await fetch(`/api/v1/race-result?userId=${user}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

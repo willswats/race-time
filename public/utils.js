@@ -38,8 +38,8 @@ export async function customAlert(text) {
   }
 }
 
-export function getRoleDropDownValue() {
+export function getUser() {
   const roleDropDown = document.querySelector('role-drop-down');
-  const value = roleDropDown.getCurrentValue();
-  return value;
+  const user = roleDropDown.getUser();
+  return user;
 }

@@ -2,6 +2,8 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import { join, dirname } from 'path';
 
+import { ROLES } from './public/utils.js';
+
 import {
   getRaceResult,
   getAllRaceResults,
@@ -49,25 +51,38 @@ async function apiAddRaceResults(req, res, next) {
   }
 }
 
-async function apiGetUser(req, res) {
-  const user = await getUser(req.query.userId);
-  res.json(user);
-}
-
 function notFound(_, res) {
   res.status(404).sendFile(`${__dirname}/server-error-pages/404.html`);
+}
+
+function checkRole(roles) {
+  return async (req, res, next) => {
+    const user = await getUser(req.query.userId);
+
+    if (!user) return res.status(401).send('Invalid credentials');
+
+    if (!roles.includes(user.userRole)) {
+      res.status(403).send('Access denied.');
+      return;
+    }
+
+    next();
+  };
 }
 
 app.use('/', express.static(join(__dirname, 'public')));
 app.use('/app/*', express.static(join(__dirname, 'public/index.html')));
 
 app.get('/api/v1/race-result', apiGetRaceResult);
-app.patch('/api/v1/race-result', express.json(), apiUpdateRaceResultNames);
+app.patch(
+  '/api/v1/race-result',
+  checkRole([ROLES.MARSHAL, ROLES.ORGANISER]),
+  express.json(),
+  apiUpdateRaceResultNames,
+);
 
 app.get('/api/v1/race-results', apiGetAllRaceResults);
 app.post('/api/v1/race-results', express.json(), apiAddRaceResults);
-
-app.get('/api/v1/user', apiGetUser);
 
 app.all('*', notFound);
 

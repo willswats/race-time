@@ -23,6 +23,7 @@ export async function getUser(userId) {
   return db.get(
     `
     SELECT 
+      users.user_id AS userId,
       users.user_role AS userRole
     FROM users
     WHERE 

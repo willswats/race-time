@@ -1,11 +1,6 @@
 import { ROLES, USERS } from '../utils.js';
 
 export class RoleDropDown extends HTMLElement {
-  constructor() {
-    super();
-    this.roles = [];
-  }
-
   connectedCallback() {
     const shadow = this.attachShadow({ mode: 'closed' });
 
@@ -15,7 +10,7 @@ export class RoleDropDown extends HTMLElement {
     link.setAttribute('href', import.meta.resolve('./role-drop-down.css'));
 
     this.select = document.createElement('select');
-    this.select.addEventListener('change', this.changeUI.bind(this));
+    this.select.addEventListener('change', this.setUser.bind(this));
 
     this.optionOne = document.createElement('option');
     this.optionOne.value = ROLES.RUNNER;
@@ -29,25 +24,28 @@ export class RoleDropDown extends HTMLElement {
     this.optionThree.value = ROLES.ORGANISER;
     this.optionThree.textContent = 'Organiser';
 
+    this.user = USERS.RUNNER;
+
     this.select.append(this.optionOne, this.optionTwo, this.optionThree);
 
     shadow.append(link, this.select);
   }
 
-  async changeUI() {
-    console.log(this.select.value);
-    const user = await this.getUser(USERS.ORGANISER);
-    console.log(user);
+  getUser() {
+    return this.user;
   }
 
-  async getUser(userId) {
-    const response = await fetch(`/api/v1/user?userId=${userId}`);
-
-    if (response.ok) {
-      const user = await response.json();
-      return user;
-    } else {
-      console.log('failed to send message', response);
+  setUser() {
+    switch (this.select.value) {
+      case ROLES.ORGANISER:
+        this.user = USERS.ORGANISER;
+        break;
+      case ROLES.MARSHAL:
+        this.user = USERS.MARSHAL;
+        break;
+      case ROLES.RUNNER:
+        this.user = USERS.RUNNER;
+        break;
     }
   }
 }
