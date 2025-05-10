@@ -64,7 +64,7 @@ export class RaceRecord extends HTMLElement {
   }
 
   recordTimerButton() {
-    if (this.timer.timePassed > 0) {
+    if (this.timer.startDate !== null) {
       this.buttonClearRaceResults.hidden = false;
       this.buttonSubmitResults.hidden = false;
       this.paragraphFeedback.textContent = '';
