@@ -49,7 +49,6 @@ const navContents = [
     roles: [ROLES.ORGANISER, ROLES.MARSHAL, ROLES.RUNNER],
   },
 ];
-console.log(navContents);
 
 const ui = {};
 const templates = {};
@@ -83,7 +82,6 @@ function buildScreens() {
 // Add event listeners to nav buttons
 function setupNavButtons() {
   const userRole = getUserRole();
-  console.log(userRole);
 
   for (const navContent of navContents) {
     if (navContent.roles.includes(userRole)) {
