@@ -13,7 +13,14 @@ export class RaceResults extends HTMLElement {
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
     link.setAttribute('href', import.meta.resolve('./race-results.css'));
-    this.shadow.append(link);
+
+    this.placeHolderSection = document.createElement('section');
+    this.placeHolderParagraph = document.createElement('p');
+    this.placeHolderParagraph.textContent =
+      'There are currently no race results';
+    this.placeHolderSection.append(this.placeHolderParagraph);
+
+    this.shadow.append(link, this.placeHolderSection);
 
     await this.addRaceSections();
   }
@@ -52,6 +59,10 @@ export class RaceResults extends HTMLElement {
       this.raceSections.push(raceSection);
 
       this.shadow.append(raceSection);
+    }
+
+    if (this.raceSections.length >= 0) {
+      this.placeHolderSection.hidden = true;
     }
   }
 
