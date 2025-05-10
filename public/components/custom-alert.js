@@ -1,3 +1,5 @@
+import { loadStyleSheet, loadGlobalStyleSheet } from '../utils';
+
 export class CustomAlert extends HTMLElement {
   constructor() {
     super();
@@ -5,14 +7,14 @@ export class CustomAlert extends HTMLElement {
     this._rejectPromise = null;
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     this.shadow = this.attachShadow({ mode: 'closed' });
 
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', import.meta.resolve('./custom-alert.css'));
-    this.shadow.append(link);
+    const globalSheet = await loadGlobalStyleSheet();
+    const sheet = await loadStyleSheet(
+      import.meta.resolve('./custom-alert.css'),
+    );
+    this.shadow.adoptedStyleSheets = [globalSheet, sheet];
 
     this.alertSectionOverlay = document.createElement('section');
     this.alertSectionOverlay.id = 'alert-overlay';

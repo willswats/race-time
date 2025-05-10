@@ -1,4 +1,4 @@
-import { customAlert } from '../utils.js';
+import { customAlert, loadStyleSheet, loadGlobalStyleSheet } from '../utils.js';
 
 export class RaceTimer extends HTMLElement {
   constructor() {
@@ -13,13 +13,11 @@ export class RaceTimer extends HTMLElement {
     this.timeString = '00:00:00';
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     this.shadow = this.attachShadow({ mode: 'closed' });
-
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', import.meta.resolve('./race-timer.css'));
+    const globalSheet = await loadGlobalStyleSheet();
+    const sheet = await loadStyleSheet(import.meta.resolve('./race-timer.css'));
+    this.shadow.adoptedStyleSheets = [globalSheet, sheet];
 
     this.paragraphTimerText = document.createElement('p');
     this.paragraphTimerText.textContent = this.timeString;
@@ -52,7 +50,7 @@ export class RaceTimer extends HTMLElement {
     this.sectionTimer.id = 'timer';
     this.sectionTimer.append(this.sectionTimerTime, this.sectionTimerButtons);
 
-    this.shadow.append(link, this.sectionTimer);
+    this.shadow.append(this.sectionTimer);
 
     this.intervalId = window.setInterval(this.update.bind(this), 1);
   }

@@ -1,5 +1,7 @@
 import { addEventListenersChangeContentRefresh } from '../index.js';
 
+import { loadStyleSheet, loadGlobalStyleSheet } from '../utils.js';
+
 export class RaceResults extends HTMLElement {
   constructor() {
     super();
@@ -9,18 +11,22 @@ export class RaceResults extends HTMLElement {
   async connectedCallback() {
     this.shadow = this.attachShadow({ mode: 'closed' });
 
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', import.meta.resolve('./race-results.css'));
+    const globalSheet = await loadGlobalStyleSheet();
+    const sheet = await loadStyleSheet(
+      import.meta.resolve('./race-results.css'),
+    );
+    this.shadow.adoptedStyleSheets = [globalSheet, sheet];
 
     this.placeHolderSection = document.createElement('section');
+    this.placeHolderSection.hidden = true;
+
     this.placeHolderParagraph = document.createElement('p');
     this.placeHolderParagraph.textContent =
       'There are currently no race results';
+
     this.placeHolderSection.append(this.placeHolderParagraph);
 
-    this.shadow.append(link, this.placeHolderSection);
+    this.shadow.append(this.placeHolderSection);
 
     await this.addRaceSections();
   }
@@ -61,8 +67,8 @@ export class RaceResults extends HTMLElement {
       this.shadow.append(raceSection);
     }
 
-    if (this.raceSections.length > 0) {
-      this.placeHolderSection.hidden = true;
+    if (this.raceSections.length < 1) {
+      this.placeHolderSection.hidden = false;
     }
   }
 

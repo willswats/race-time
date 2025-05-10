@@ -3,6 +3,8 @@ import {
   setErrorColour,
   customAlert,
   getUserId,
+  loadStyleSheet,
+  loadGlobalStyleSheet,
 } from '../utils.js';
 
 export class RaceRecord extends HTMLElement {
@@ -12,13 +14,14 @@ export class RaceRecord extends HTMLElement {
     this.raceResults = [];
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     this.shadow = this.attachShadow({ mode: 'closed' });
 
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', import.meta.resolve('./race-record.css'));
+    const globalSheet = await loadGlobalStyleSheet();
+    const sheet = await loadStyleSheet(
+      import.meta.resolve('./race-record.css'),
+    );
+    this.shadow.adoptedStyleSheets = [globalSheet, sheet];
 
     this.buttonClearRaceResults = document.createElement('button');
     this.buttonClearRaceResults.textContent = 'Clear';
@@ -65,7 +68,7 @@ export class RaceRecord extends HTMLElement {
       this.buttonRecordTime,
     );
 
-    this.shadow.append(link, this.sectionRaceResults);
+    this.shadow.append(this.sectionRaceResults);
   }
 
   recordTimerButton() {

@@ -28,6 +28,27 @@ export function setErrorColour(e) {
   e.classList.add('error');
 }
 
+export async function loadStyleSheet(stylesheet) {
+  try {
+    const response = await fetch(stylesheet);
+    const cssText = await response.text();
+
+    const sheet = new CSSStyleSheet();
+    await sheet.replace(cssText);
+
+    return sheet;
+  } catch (error) {
+    console.error('Failed to load stylesheet:', error);
+    return new CSSStyleSheet();
+  }
+}
+
+export async function loadGlobalStyleSheet() {
+  const globalCss = import.meta.resolve('./globals.css');
+  const sheet = await loadStyleSheet(globalCss);
+  return sheet;
+}
+
 export async function customAlert(text) {
   try {
     const customAlert = document.querySelector('custom-alert');

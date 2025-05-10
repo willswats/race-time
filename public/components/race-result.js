@@ -3,6 +3,8 @@ import {
   setErrorColour,
   getUserId,
   getUserRole,
+  loadStyleSheet,
+  loadGlobalStyleSheet,
   ROLES,
 } from '../utils.js';
 
@@ -10,11 +12,11 @@ export class RaceResult extends HTMLElement {
   async connectedCallback() {
     this.shadow = this.attachShadow({ mode: 'closed' });
 
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', import.meta.resolve('./race-result.css'));
-    this.shadow.append(link);
+    const globalSheet = await loadGlobalStyleSheet();
+    const sheet = await loadStyleSheet(
+      import.meta.resolve('./race-result.css'),
+    );
+    this.shadow.adoptedStyleSheets = [globalSheet, sheet];
 
     this.form = document.createElement('form');
 

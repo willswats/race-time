@@ -1,5 +1,3 @@
-@import '/globals.css';
-
 #timer {
   display: flex;
   flex-direction: column;
