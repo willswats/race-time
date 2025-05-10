@@ -1,3 +1,5 @@
+import { refreshNav } from '../index.js';
+
 import { ROLES, USERS } from '../utils.js';
 
 export class RoleDropDown extends HTMLElement {
@@ -11,6 +13,7 @@ export class RoleDropDown extends HTMLElement {
 
     this.select = document.createElement('select');
     this.select.addEventListener('change', this.setUser.bind(this));
+    this.select.addEventListener('change', refreshNav);
 
     this.optionOne = document.createElement('option');
     this.optionOne.value = ROLES.RUNNER;
@@ -29,6 +32,10 @@ export class RoleDropDown extends HTMLElement {
     this.select.append(this.optionOne, this.optionTwo, this.optionThree);
 
     shadow.append(link, this.select);
+  }
+
+  getRole() {
+    return this.select.value;
   }
 
   getUser() {

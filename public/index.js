@@ -1,9 +1,13 @@
-import { showElement, hideElement } from './utils.js';
+import { showElement, hideElement, getUserRole, ROLES } from './utils.js';
 
 const pages = [
   {
     screen: 'home',
     title: 'Home',
+  },
+  {
+    screen: 'race-timer',
+    title: 'Race Timer',
   },
   {
     screen: 'race-record',
@@ -27,16 +31,25 @@ const navContents = [
   {
     screen: 'home',
     title: 'Home',
+    roles: [ROLES.ORGANISER, ROLES.MARSHAL, ROLES.RUNNER],
+  },
+  {
+    screen: 'race-timer',
+    title: 'Race Timer',
+    roles: [ROLES.ORGANISER],
   },
   {
     screen: 'race-record',
     title: 'Race Record',
+    roles: [ROLES.ORGANISER, ROLES.MARSHAL],
   },
   {
     screen: 'race-results',
     title: 'Race Results',
+    roles: [ROLES.ORGANISER, ROLES.MARSHAL, ROLES.RUNNER],
   },
 ];
+console.log(navContents);
 
 const ui = {};
 const templates = {};
@@ -69,17 +82,24 @@ function buildScreens() {
 
 // Add event listeners to nav buttons
 function setupNavButtons() {
+  const userRole = getUserRole();
+  console.log(userRole);
+
   for (const navContent of navContents) {
-    const button = document.createElement('button');
-    button.textContent = navContent.title;
-    button.dataset.screen = navContent.screen;
-    if (button.dataset.screen === 'race-results') {
-      // The race-results button needs to be able to refresh its data in case a user submits new data
-      addEventListenersChangeContentButtonRefresh(button);
-    } else {
-      addEventListenersChangeContentButton(button);
+    if (navContent.roles.includes(userRole)) {
+      const button = document.createElement('button');
+      button.textContent = navContent.title;
+      button.dataset.screen = navContent.screen;
+
+      if (button.dataset.screen === 'race-results') {
+        // The race-results button needs to be able to refresh its data in case a user submits new data
+        addEventListenersChangeContentRefresh(button, 'click');
+      } else {
+        addEventListenersChangeContent(button, 'click');
+      }
+
+      ui.nav.append(button);
     }
-    ui.nav.append(button);
   }
 }
 
@@ -110,15 +130,21 @@ function getPageContent() {
   }
 }
 
-function addEventListenersChangeContentButton(button) {
-  button.addEventListener('click', show);
-  button.addEventListener('click', storeState);
+function addEventListenersChangeContent(element, eventType) {
+  element.addEventListener(eventType, show);
+  element.addEventListener(eventType, storeState);
 }
 
 // For buttons that require a content refresh
-export function addEventListenersChangeContentButtonRefresh(button) {
-  button.addEventListener('click', refreshContent);
-  addEventListenersChangeContentButton(button);
+export function addEventListenersChangeContentRefresh(element, eventType) {
+  element.addEventListener(eventType, refreshContent);
+  addEventListenersChangeContent(element, eventType);
+}
+
+export function refreshNav() {
+  const navButtons = ui.nav.querySelectorAll('button');
+  navButtons.forEach((button) => button.remove());
+  setupNavButtons();
 }
 
 // Remove element from <main>
@@ -179,7 +205,7 @@ function main() {
   getHandles();
   getPageContent();
   buildScreens();
-  setupNavButtons();
+  window.addEventListener('load', setupNavButtons);
   // this event listener is needed so that loadScreen
   // will run when the user presses the forward and
   // back buttons on the browser

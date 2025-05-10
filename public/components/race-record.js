@@ -1,4 +1,9 @@
-import { setSuccessColour, setErrorColour, customAlert } from '../utils.js';
+import {
+  setSuccessColour,
+  setErrorColour,
+  customAlert,
+  getUserId,
+} from '../utils.js';
 
 export class RaceRecord extends HTMLElement {
   constructor() {
@@ -114,8 +119,9 @@ export class RaceRecord extends HTMLElement {
   async submitTime() {
     // reverse the race results as unshift was used and not append
     const payload = { raceResults: this.raceResults.reverse() };
+    const userId = await getUserId();
 
-    const response = await fetch('/api/v1/race-results', {
+    const response = await fetch(`/api/v1/race-results?userId=${userId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

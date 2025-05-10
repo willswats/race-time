@@ -82,7 +82,12 @@ app.patch(
 );
 
 app.get('/api/v1/race-results', apiGetAllRaceResults);
-app.post('/api/v1/race-results', express.json(), apiAddRaceResults);
+app.post(
+  '/api/v1/race-results',
+  checkRole([ROLES.MARSHAL, ROLES.ORGANISER]),
+  express.json(),
+  apiAddRaceResults,
+);
 
 app.all('*', notFound);
 

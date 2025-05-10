@@ -38,8 +38,14 @@ export async function customAlert(text) {
   }
 }
 
-export function getUser() {
+export function getUserId() {
   const roleDropDown = document.querySelector('role-drop-down');
-  const user = roleDropDown.getUser();
-  return user;
+  const id = roleDropDown.getUser();
+  return id;
+}
+
+export function getUserRole() {
+  const roleDropDown = document.querySelector('role-drop-down');
+  const role = roleDropDown.getRole();
+  return role;
 }

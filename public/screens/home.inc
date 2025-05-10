@@ -1,1 +1,1 @@
-<race-timer></race-timer>
+<p>Home!</p>
