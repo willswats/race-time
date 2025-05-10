@@ -1,4 +1,4 @@
-import { loadStyleSheet, loadGlobalStyleSheet } from '../utils';
+import { loadStyleSheet, loadGlobalStyleSheet } from '../utils.js';
 
 export class CustomAlert extends HTMLElement {
   constructor() {
