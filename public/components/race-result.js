@@ -50,12 +50,6 @@ export class RaceResult extends HTMLElement {
     this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
 
-  disconnectedCallback() {
-    this.intervalId = window.clearInterval(this.intervalId);
-  }
-
-  update() {}
-
   async setRaceResult() {
     const urlParams = new URLSearchParams(window.location.search);
     this.raceResultId = urlParams.get('raceResultId');

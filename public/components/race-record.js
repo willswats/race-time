@@ -20,6 +20,7 @@ export class RaceRecord extends HTMLElement {
 
     this.buttonSubmitTime = document.createElement('button');
     this.buttonSubmitTime.textContent = 'Submit';
+    this.buttonSubmitTime.hidden = true;
 
     this.buttonRecordTimer.addEventListener(
       'click',
@@ -31,6 +32,7 @@ export class RaceRecord extends HTMLElement {
     );
 
     this.olRaceResults = document.createElement('ol');
+    this.olRaceResults.hidden = true;
     this.olRaceResults.reversed = true;
 
     this.sectionRaceResultsButtons = document.createElement('section');
@@ -57,17 +59,23 @@ export class RaceRecord extends HTMLElement {
     this.shadow.append(link, this.sectionRaceResults);
   }
 
-  disconnectedCallback() {
-    this.intervalId = window.clearInterval(this.intervalId);
-  }
-
   recordTimerButton() {
-    // unshift instead of append so that race results can appear at the top of the ordered list
-    this.raceResults.unshift(this.timer.timeString);
+    if (this.timer.timePassed > 0) {
+      this.buttonSubmitTime.hidden = false;
+      this.olRaceResults.hidden = false;
+      this.paragraphFeedback.textContent = '';
 
-    const record = document.createElement('li');
-    record.textContent = this.timer.timeString;
-    this.olRaceResults.prepend(record);
+      // unshift instead of append so that race results can appear at the top of the ordered list
+      this.raceResults.unshift(this.timer.timeString);
+
+      const record = document.createElement('li');
+      record.textContent = this.timer.timeString;
+      this.olRaceResults.prepend(record);
+    } else {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent =
+        'The timer must be started in order to record times!';
+    }
   }
 
   async submitTimeButton() {
@@ -82,6 +90,9 @@ export class RaceRecord extends HTMLElement {
   }
 
   clearRaceResults() {
+    this.buttonSubmitTime.hidden = true;
+    this.olRaceResults.hidden = true;
+
     this.raceResults = [];
     this.olRaceResults.replaceChildren();
   }

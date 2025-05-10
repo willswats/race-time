@@ -20,12 +20,6 @@ export class RaceResults extends HTMLElement {
     this.intervalId = window.setInterval(this.update.bind(this), 1);
   }
 
-  disconnectedCallback() {
-    this.intervalId = window.clearInterval(this.intervalId);
-  }
-
-  update() {}
-
   async addRaceSections() {
     const allRaceResults = await this.getAllRaceResults();
 
