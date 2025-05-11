@@ -28,7 +28,8 @@
   margin: 0.5rem 0;
   width: 100%;
   height: 100%;
-  overflow: scroll;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #timer-results-buttons {
