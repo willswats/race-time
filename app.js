@@ -103,7 +103,7 @@ app.post(
 app.get('/api/v1/timer', apiGetTimer);
 app.post(
   '/api/v1/timer',
-  checkRole([ROLES.MARSHAL, ROLES.ORGANISER]),
+  checkRole([ROLES.ORGANISER]),
   express.json(),
   apiUpdateTimer,
 );
