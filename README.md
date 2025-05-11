@@ -7,6 +7,7 @@
 - [9.1 Key features](#91-key-features)
   - [Role Drop Down/Select a role in the drop-down for certain permissions](#role-drop-downselect-a-role-in-the-drop-down-for-certain-permissions)
   - [Timer/Start and stop a race timer](#timerstart-and-stop-a-race-timer)
+  - [Record Screen/Record runners who cross the finish line](#record-screenrecord-runners-who-cross-the-finish-line)
   - [Results/View all race results](#resultsview-all-race-results)
   - [Result/View a specific race result and edit the names](#resultview-a-specific-race-result-and-edit-the-names)
   - [Client-side Routing/No browser refreshing when navigating through pages](#client-side-routingno-browser-refreshing-when-navigating-through-pages)
@@ -42,13 +43,21 @@ The `role-drop-down` component uses `localStorage` to set the `userId` and `user
 
 On the client, when submitting race results and when editing a race result, the user id is sent to the server as a query parameter (the user id is taken from `localStorage` through the utility function `getUserId()` at `public/utils.js`). On the server the user id sent as a query parameter is checked to see if the user id exists in the database and if the user id corresponds with the correct role to perform that action (as seen with the `checkRole()` function in `app.js`). This method of authentication is not secure, however, I am assuming that the authentication would be refactored so that it is handled by a third-party if this were to ever be used.
 
-The `setupNavButtons()` function in `public/index.js` uses the `getUserRole()` function in `public/utils.js` to dictate which nav buttons to show depending on the type of user that they are. The `role-drop-down` component uses the `refreshNav()` function and the `refreshCurrentScreen()` function whenever the `<select>` changes so that the UI is updated to correspond to the current role.
+To selectively show parts of the UI, the `setupNavButtons()` function in `public/index.js` uses the `getUserRole()` function in `public/utils.js` to dictate which nav buttons to show depending on the type of user that they are. The `role-drop-down` component uses the `refreshNav()` and `refreshCurrentScreen()` functions from `public/index.js` whenever the `<select>` (`role-drop-down` is a `<select>` component) changes so that the UI is updated to correspond to the current role - this can be seen with the race result page, where the inputs become unable to edit and the submit button is hidden as the runner role.
 
 ### Timer/Start and stop a race timer
 
-In the bottom-left of the screen, change your role to organiser, then click the "Timer" button in nav to open the race timer. To start the timer, click the start button. To stop the climber click the stop button, and then click 'Ok' on the prompt.
+In the bottom-left of the screen, change your role to organiser, then click the "Timer" button in nav to open the race timer. To start the timer, click the start button. To stop the timer click the stop button, and then click 'Ok' on the prompt.
+
+The `race-timer` component sets `this.startDate` to `Date.now()` to determine the time it should be. `Date.now()` is the amount of time passed in milliseconds since the UNIX epoch. In the `update()` method of the component, it determines the amount of time passed since `this.startDate` by running `Date.now() - this.startDate`, this is assigned to `this.timePassed`. `this.timePassed` is then used to create the string of time seen on the screen by converting it from milliseconds to seconds, minutes and hours in the `updateTimeString()` method.
+
+Previously I used `setTimeout` to set the amount of milliseconds that have passed, however, this then becomes device dependent (`setTimeout` can run differently deepening on the device's performance), therefore, I opted to use `Date.now()` instead.
+
+### Record Screen/Record runners who cross the finish line
 
 ### Results/View all race results
+
+Click the "Results" button in the nav to open the race results screen. This screen shows all the results that have been recorded and submitted my marshals or organisers on the "Record" screen. Click on an individual race result to view the first name and last name of the race result (if they have been set by a marshal or organiser, otherwise it will be empty).
 
 ### Result/View a specific race result and edit the names
 
