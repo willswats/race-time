@@ -370,4 +370,6 @@ The chatbot told me that `req.user` is undefined, because HTTP is stateless so `
 
 ## 9.3 Discusses why and how you have improved your artefact since the prototype deadline
 
+While developing this application, it went through several iterations. After the Easter break, I had an app which had the timer and record on the same page, and then a separate page for the race results, but you could not click on the individual race results and set the names for the runners.
+
 ## 9.4 Reflects on the development as a whole, including your use of AI
