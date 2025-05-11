@@ -13,6 +13,8 @@ CREATE TABLE race_result (
     race_result_last_name TEXT
 );
 
+CREATE TABLE timer (timer_start_date TEXT);
+
 CREATE TABLE users (user_id CHAR(36), user_role TEXT);
 
 INSERT INTO
@@ -29,5 +31,7 @@ VALUES
 DROP TABLE race_results;
 
 DROP TABLE race_result;
+
+DROP TABLE timer;
 
 DROP TABLE users;

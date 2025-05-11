@@ -12,6 +12,7 @@ import {
 } from './api/v1/race-results.js';
 
 import { getUser } from './api/v1/users.js';
+import { addTimer, deleteTimer, getTimer } from './api/v1/timer.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -51,6 +52,21 @@ async function apiAddRaceResults(req, res, next) {
   }
 }
 
+async function apiGetTimer(_, res) {
+  const timer = await getTimer();
+  res.json(timer);
+}
+
+async function apiAddTimer(req, res) {
+  const timer = await addTimer(req.body.startDate);
+  res.json(timer);
+}
+
+async function apiDeleteTimer(_, res) {
+  const timer = await deleteTimer();
+  res.json(timer);
+}
+
 function notFound(_, res) {
   res.status(404).sendFile(`${__dirname}/server-error-pages/404.html`);
 }
@@ -87,6 +103,20 @@ app.post(
   checkRole([ROLES.MARSHAL, ROLES.ORGANISER]),
   express.json(),
   apiAddRaceResults,
+);
+
+app.get('/api/v1/timer', apiGetTimer);
+app.post(
+  '/api/v1/timer',
+  checkRole([ROLES.MARSHAL, ROLES.ORGANISER]),
+  express.json(),
+  apiAddTimer,
+);
+app.delete(
+  '/api/v1/timer',
+  checkRole([ROLES.MARSHAL, ROLES.ORGANISER]),
+  express.json(),
+  apiDeleteTimer,
 );
 
 app.all('*', notFound);

@@ -1,15 +1,18 @@
-import { customAlert, loadStyleSheet, loadGlobalStyleSheet } from '../utils.js';
+import {
+  createTimeString,
+  customAlert,
+  loadStyleSheet,
+  loadGlobalStyleSheet,
+  getUserId,
+  setSuccessColour,
+  setErrorColour,
+} from '../utils.js';
 
 export class RaceTimer extends HTMLElement {
   constructor() {
     super();
 
     this.startDate = null;
-    this.timePassed = 0;
-    this.hours = 0;
-    this.minutes = 0;
-    this.seconds = 0;
-    this.milliseconds = 0;
     this.timeString = '00:00:00';
   }
 
@@ -46,9 +49,17 @@ export class RaceTimer extends HTMLElement {
       this.buttonStopTimer,
     );
 
+    this.paragraphFeedback = document.createElement('p');
+
     this.sectionTimer = document.createElement('section');
     this.sectionTimer.id = 'timer';
-    this.sectionTimer.append(this.sectionTimerTime, this.sectionTimerButtons);
+    this.sectionTimer.append(
+      this.sectionTimerTime,
+      this.paragraphFeedback,
+      this.sectionTimerButtons,
+    );
+
+    this.getTimer();
 
     this.shadow.append(this.sectionTimer);
 
@@ -63,50 +74,82 @@ export class RaceTimer extends HTMLElement {
     this.setTimerText();
 
     if (this.startDate) {
-      this.timePassed = Date.now() - this.startDate;
-      this.updateTimeString();
+      this.timeString = createTimeString(this.startDate);
     }
-  }
-
-  padToDigits(digit, num) {
-    return num.toString().padStart(digit, '0');
-  }
-
-  updateTimeString() {
-    this.milliseconds = this.timePassed % 1000;
-    this.seconds = Math.floor(this.timePassed / 1000);
-    this.minutes = Math.floor(this.seconds / 60);
-    this.hours = Math.floor(this.minutes / 60);
-
-    this.seconds = this.seconds % 60;
-    this.minutes = this.minutes % 60;
-
-    this.timeString = `${this.padToDigits(2, this.hours)}:${this.padToDigits(2, this.minutes)}:${this.padToDigits(2, this.seconds)}`;
   }
 
   setTimerText() {
     this.paragraphTimerText.textContent = this.timeString;
   }
 
-  startTimer() {
-    this.startDate = Date.now();
-    this.buttonStartTimer.hidden = true;
-    this.buttonStopTimer.hidden = false;
+  async getTimer() {
+    const response = await fetch(`/api/v1/timer`);
+    if (response.ok) {
+      const timer = await response.json();
+      this.startDate = timer.timerStartDate;
+      this.buttonStartTimer.hidden = true;
+      this.buttonStopTimer.hidden = false;
+    } else {
+      console.log('failed to send message', response);
+    }
   }
 
-  stopTimer() {
-    this.startDate = null;
-    this.buttonStartTimer.hidden = false;
-    this.buttonStopTimer.hidden = true;
+  async startTimer() {
+    const startDate = Date.now();
+
+    const payload = { startDate };
+    const userId = getUserId();
+
+    const response = await fetch(`/api/v1/timer?userId=${userId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    console.log(response);
+
+    if (response.ok) {
+      this.startDate = startDate;
+      this.buttonStartTimer.hidden = true;
+      this.buttonStopTimer.hidden = false;
+
+      setSuccessColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'Successfully submitted!';
+    } else if (response.status === 403) {
+      console.log(response);
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent =
+        "You role doesn't have permission to perform this action!";
+    } else {
+      console.log(response);
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'Failed to send message!';
+    }
   }
 
-  resetTimer() {
-    this.startDate = null;
-    this.timePassed = 0;
-    this.milliseconds = 0;
-    this.seconds = 0;
-    this.minutes = 0;
-    this.hours = 0;
+  async stopTimer() {
+    const userId = getUserId();
+
+    const response = await fetch(`/api/v1/timer?userId=${userId}`, {
+      method: 'DELETE',
+    });
+    console.log(response);
+
+    if (response.ok) {
+      this.startDate = null;
+      this.buttonStartTimer.hidden = false;
+      this.buttonStopTimer.hidden = true;
+
+      setSuccessColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'Successfully submitted!';
+    } else if (response.status === 403) {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent =
+        "You role doesn't have permission to perform this action!";
+    } else {
+      console.log(response);
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'Failed to send message!';
+    }
   }
 
   async stopTimerButton() {

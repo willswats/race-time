@@ -5,11 +5,13 @@ import {
   getUserId,
   loadStyleSheet,
   loadGlobalStyleSheet,
+  createTimeString,
 } from '../utils.js';
 
 export class RaceRecord extends HTMLElement {
   constructor() {
     super();
+    this.timerStartDate = null;
     this.raceResults = [];
   }
 
@@ -67,37 +69,37 @@ export class RaceRecord extends HTMLElement {
       this.buttonRecordTime,
     );
 
-    this.timer = document.querySelector('race-timer');
+    this.getTimer();
 
     this.shadow.append(this.sectionRaceResults);
   }
 
+  async getTimer() {
+    const response = await fetch(`/api/v1/timer`);
+    if (response.ok) {
+      const timer = await response.json();
+      this.timerStartDate = timer.timerStartDate;
+    } else {
+      console.log('failed to send message', response);
+    }
+  }
+
   recordTimerButton() {
-    if (this.timer.startDate !== null) {
+    if (this.timerStartDate !== null) {
       this.buttonClearRaceResults.hidden = false;
       this.buttonSubmitResults.hidden = false;
       this.paragraphFeedback.textContent = '';
 
-      this.raceResults.push(this.timer.timeString);
+      const timeString = createTimeString(this.timerStartDate);
+      this.raceResults.push(timeString);
 
       const record = document.createElement('li');
-      record.textContent = this.timer.timeString;
+      record.textContent = timeString;
       this.olRaceResults.prepend(record);
     } else {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
         'The timer must be started in order to record times!';
-    }
-  }
-
-  async submitTimeButton() {
-    const confirm = await customAlert(
-      'Are you sure you want to submit your results?',
-    );
-
-    if (confirm) {
-      this.submitTime();
-      this.clearRaceResults();
     }
   }
 
@@ -139,6 +141,17 @@ export class RaceRecord extends HTMLElement {
     } else {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Failed to send message!';
+    }
+  }
+
+  async submitTimeButton() {
+    const confirm = await customAlert(
+      'Are you sure you want to submit your results?',
+    );
+
+    if (confirm) {
+      this.submitTime();
+      this.clearRaceResults();
     }
   }
 }

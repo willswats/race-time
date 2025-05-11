@@ -76,3 +76,20 @@ export function getUserRole() {
   }
   return userRole;
 }
+
+export function createTimeString(startDate) {
+  function padToDigits(digit, num) {
+    return num.toString().padStart(digit, '0');
+  }
+
+  const timePassed = Date.now() - startDate;
+  let seconds = Math.floor(timePassed / 1000);
+  let minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  seconds = seconds % 60;
+  minutes = minutes % 60;
+
+  const timeString = `${padToDigits(2, hours)}:${padToDigits(2, minutes)}:${padToDigits(2, seconds)}`;
+  return timeString;
+}
