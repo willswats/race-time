@@ -12,7 +12,7 @@
   - [Result/View a specific race result and edit the names](#resultview-a-specific-race-result-and-edit-the-names)
   - [Client-side Routing/No browser refreshing when navigating through pages](#client-side-routingno-browser-refreshing-when-navigating-through-pages)
   - [Custom Alert Prompt/Replaces the default JavaScript alert](#custom-alert-promptreplaces-the-default-javascript-alert)
-  - [Progressive Web App/Install the application on your phone](#progressive-web-appinstall-the-application-on-your-phone)
+  - [Progressive Web App/Install the application on your device](#progressive-web-appinstall-the-application-on-your-device)
 - [9.2 AI](#92-ai)
   - [Prompts to develop the `getAllRaceResults` function at `api/v1/race-results.js`](#prompts-to-develop-the-getallraceresults-function-at-apiv1race-resultsjs)
   - [Prompts to develop the `custom-alert` component at `public/components/custom-alert.js`](#prompts-to-develop-the-custom-alert-component-at-publiccomponentscustom-alertjs)
@@ -55,17 +55,43 @@ Previously I used `setTimeout` to set the amount of milliseconds that have passe
 
 ### Record Screen/Record runners who cross the finish line
 
+In the bottom-left of the screen, change your role to organiser, click on the timer button in the nav, click start on the timer, then navigate to the record page, you can now record times by clicking record. You can submit your times to the database by clicking "Submit" and you can clear the local results by clicking "Clear". If you do not start the timer before clicking record, an error message will appear on the UI and you will not be able to record any times. After clicking start on the timer, you can freely change your role to marshal if needed as well.
+
+The record button uses a reference to the timer with the use of `document.querySelector` to get the `timeString` from the `race-timer` component, which it then adds to a `raceResults` array with `push`. It then creates an `<li>` element with the `textContent` set to the timer's `timeString`, which it `prepend`'s to the `<ol>` element.I am using `prepend` instead of `append` so that the element appears at the top of the ordered list, this ensures that the user will always receive visual feedback upon clicking the record button.
+
+The submit button calls `submitTime()` which sends a `POST` request to the server with the `userId` attached as a query parameter as this action can only be performed by users who are organisers or marshals.
+
 ### Results/View all race results
 
 Click the "Results" button in the nav to open the race results screen. This screen shows all the results that have been recorded and submitted my marshals or organisers on the "Record" screen. Click on an individual race result to view the first name and last name of the race result (if they have been set by a marshal or organiser, otherwise it will be empty).
 
+The race results screen gets all the race results from the database through a fetch request to the server, it then constructs the race `<section>` elements for each race, as well as a `<li>` and `<button>` for each race result. If there are no race results, then the place holder element is shown, which states that there are no race results. All of the buttons have an event listener for appending the `?raceResultId` parameter to the URL along with the race id.
+
 ### Result/View a specific race result and edit the names
+
+After recording and submitting results on the record screen, click the "Results" button in the nav to open the race results screen, then click on a specific race result. To edit the first name and last name of a race result, ensure that your role is set to marshal or organiser, then change the first name, last name and click submit.
+
+The race result screen gets the `raceResultId` from the URL when it is added to the document, it then does a `GET` request for the specific race result with that id, which it then uses to populate the input fields with the first name and last name if they exist for that race result.
+
+The `submitRaceResultNames()` method is used to update the first name and last name of the race result in the database. It sends the `raceResultId`, `raceResultFirstName` and `raceResultLastName` as the payload, as well as the `userId` in the parameter to verify that the user is either a marshal or organiser.
 
 ### Client-side Routing/No browser refreshing when navigating through pages
 
+Click on any of the buttons in the nav and the pages will load without the browser refreshing.
+
+This was accomplished in the `public/index.js` file, where the content is fetched from the `public/screens` directory and then added to the html with a class that hides the element. All of the buttons have a `dataset.screen` property which dictates the screen that it should show when clicked. The buttons have events added to them that use the `event.target.dataset.screen` to show that specific screen by hiding all other screens and then removing the class for that specific screen. Some of the buttons, such as the `Results` button in the nav have an extra event listener added to them, which refreshes the screen contents by removing that screen element and then rebuilding the content for it. Certain screens need to refresh, because the data can get updated while the user is using the application.
+
 ### Custom Alert Prompt/Replaces the default JavaScript alert
 
-### Progressive Web App/Install the application on your phone
+Change your role to organiser, click on the timer, click start and then click stop - this will show the custom-alert.
+
+The `custom-alert` `showAlert()` returns a promise which is resolved if the user clicks "Ok" and rejected if the user clicks "Cancel". In `public/utils.js` the `customAlert()` function searches for the `custom-alert` component in the document, then calls the `showAlert()` method, this is wrapped in a `try catch` statement so that `false` can be returned if the user rejects the promise.
+
+### Progressive Web App/Install the application on your device
+
+You can install the web app on your device depending on the browser you are using in different ways, for Chrome see [here](https://support.google.com/chrome/answer/9658361?hl=en&co=GENIE.Platform%3DDesktop).
+
+Once the window loads the service worker is registered, this is done in `public/register-sw.js`. It registers the `public/sw.js` file, which adds all the `public` files to the cache.
 
 ## 9.2 AI
 
