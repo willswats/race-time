@@ -5,49 +5,58 @@
 <!--toc:start-->
 
 - [9.1 Key features](#91-key-features)
-  - [Race Timer/Start and stop a race timer](#race-timerstart-and-stop-a-race-timer)
-  - [Race Results/View all race results](#race-resultsview-all-race-results)
-  - [Race Result/View a specific race result and edit the names](#race-resultview-a-specific-race-result-and-edit-the-names)
-  - [Role Selection/Select a role in the drop-down for certain permissions](#role-selectionselect-a-role-in-the-drop-down-for-certain-permissions)
-  - [No refresh](#no-refresh)
-  - [Custom Alert Prompt](#custom-alert-prompt)
+  - [Role Drop Down/Select a role in the drop-down for certain permissions](#role-drop-downselect-a-role-in-the-drop-down-for-certain-permissions)
+  - [Timer/Start and stop a race timer](#timerstart-and-stop-a-race-timer)
+  - [Results/View all race results](#resultsview-all-race-results)
+  - [Result/View a specific race result and edit the names](#resultview-a-specific-race-result-and-edit-the-names)
+  - [Client-side Routing/No browser refreshing when navigating through pages](#client-side-routingno-browser-refreshing-when-navigating-through-pages)
+  - [Custom Alert Prompt/Replaces the default JavaScript alert](#custom-alert-promptreplaces-the-default-javascript-alert)
+  - [Progressive Web App/Install the application on your phone](#progressive-web-appinstall-the-application-on-your-phone)
 - [9.2 AI](#92-ai)
   - [Prompts to develop the `getAllRaceResults` function at `api/v1/race-results.js`](#prompts-to-develop-the-getallraceresults-function-at-apiv1race-resultsjs)
   - [Prompts to develop the `custom-alert` component at `public/components/custom-alert.js`](#prompts-to-develop-the-custom-alert-component-at-publiccomponentscustom-alertjs)
   - [Prompts to develop all components at `public/components`](#prompts-to-develop-all-components-at-publiccomponents)
   - [Prompts to develop the `checkRole` function at `app.js`](#prompts-to-develop-the-checkrole-function-at-appjs)
 - [9.3 Discusses why and how you have improved your artefact since the prototype deadline](#93-discusses-why-and-how-you-have-improved-your-artefact-since-the-prototype-deadline)
-- [9.4 Reflects on the development as a whole, including your use of AI.](#94-reflects-on-the-development-as-a-whole-including-your-use-of-ai)
+- [9.4 Reflects on the development as a whole, including your use of AI](#94-reflects-on-the-development-as-a-whole-including-your-use-of-ai)
 <!--toc:end-->
 
 ## 9.1 Key features
 
-Replace this text with an introduction to your key features.
+Key features include:
 
-1. The Organiser starts the timer.
-2. Marshals stand at the finish line and record the racers as each runner passes the finish line.
-3. The Runners queue up at the end of the race in-order so that a Marshal can assign their name to their time.
-4. The Runners can then view their times in the app.
+- Role drop down selection with permissions, allowing users to choose between 'Runner', 'Marshal' and 'Organiser' - this selectively shows UI and prevents certain users from performing certain actions on the server.
+- Timer for the organiser to start and stop the time for the race.
+- Record screen for organisers and marshals to record runners who cross the finish line.
+- Results screen so that users can view all of the race results.
+- View an individual result by clicking on one of them on the results screen - this is used by marshals and organisers to add the runner's name to a result. Once the name is added, the runner can find it and view it there self, but can not edit it.
+- Client-side routing, allowing for no browser refreshing - which also allows for the state to be saved when navigating between pages. Certain pages are designated to refresh the data from the server (results screen and view result screen), but this does not require any refreshing of the browser.
+- A custom alert prompt is used in places where the user is performing an important action (stopping the timer and submitting race results), this allows for the alert to fit the style of the application more. Moreover, the default JavaScript alert causes the application to pause, which causes issues with the running timer.
+- Service worker and manifest file for installing the application as a progressive web app.
 
-### Race Timer/Start and stop a race timer
+### Role Drop Down/Select a role in the drop-down for certain permissions
 
-In the bottom-left change your role to organiser, then click the "Timer" button in nav to open the race timer. To start the timer, click the start button. To stop the climber click the stop button, and then click 'Ok' on the prompt
+In the bottom-left of the screen, the user can find the role drop down menu, clicking the menu will show three options; 'Runner', 'Marshal', and 'Organiser'. Selecting one of these options will assign the role to the user, this will rebuild the nav to show only the pages that the current role has access to, moreover, it will not allow certain roles to perform certain actions on the server. The runner role cannot submit times to the server, and they cannot edit a race result, whereas the marshal and organiser roles can, this is shown in the UI of the application with error messages (after the server responds with 403 - forbidden).
 
-Describe the thinking behind the design of this feature.
+The `role-drop-down` component uses `localStorage` to set the `userId` and `userRole`. The `userId` and `userRole` are taken from `public/utils.js` through the constants `ROLES` and `USERS`. The `ROLES` object contains strings assigned to each role, this prevents the developer from using the wrong string for a role. The `USERS` object contains keys set to the role, and user ids as the value, where the user ids correspond to users in the database with that role (as seen in `/migrations-sqlite/001-initial.sql`), this is used for authentication.
 
-### Race Results/View all race results
+On the client, when submitting race results and when editing a race result, the user id is sent to the server as a query parameter (the user id is taken from `localStorage` through the utility function `getUserId()` at `public/utils.js`). On the server the user id sent as a query parameter is checked to see if the user id exists in the database and if the user id corresponds with the correct role to perform that action (as seen with the `checkRole()` function in `app.js`). This method of authentication is not secure, however, I am assuming that the authentication would be refactored so that it is handled by a third-party if this were to ever be used.
 
-### Race Result/View a specific race result and edit the names
+The `setupNavButtons()` function in `public/index.js` uses the `getUserRole()` function in `public/utils.js` to dictate which nav buttons to show depending on the type of user that they are. The `role-drop-down` component uses the `refreshNav()` function and the `refreshCurrentScreen()` function whenever the `<select>` changes so that the UI is updated to correspond to the current role.
 
-### Role Selection/Select a role in the drop-down for certain permissions
+### Timer/Start and stop a race timer
 
-In the bottom-left of the screen, the user can find the role drop down menu, clicking the menu will show three options; 'Runner', 'Marshal', and 'Organiser'.
+In the bottom-left of the screen, change your role to organiser, then click the "Timer" button in nav to open the race timer. To start the timer, click the start button. To stop the climber click the stop button, and then click 'Ok' on the prompt.
 
-This component uses `localStorage` to set the `userId` and `userRole`, which is subsequently used by the `setupNavButtons` function in `public/index.js` to dictate which nav buttons to show depending on the type of user that they are. Moreover, the userId is taken from the localStorage and added to the query when submitting results and when submitting result names, this is then checked with the IDS for users in the database to determine whether the user has the permission to access the API function.
+### Results/View all race results
 
-### No refresh
+### Result/View a specific race result and edit the names
 
-### Custom Alert Prompt
+### Client-side Routing/No browser refreshing when navigating through pages
+
+### Custom Alert Prompt/Replaces the default JavaScript alert
+
+### Progressive Web App/Install the application on your phone
 
 ## 9.2 AI
 
@@ -326,4 +335,4 @@ The chatbot told me that `req.user` is undefined, because HTTP is stateless so `
 
 ## 9.3 Discusses why and how you have improved your artefact since the prototype deadline
 
-## 9.4 Reflects on the development as a whole, including your use of AI.
+## 9.4 Reflects on the development as a whole, including your use of AI
