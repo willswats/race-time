@@ -5,13 +5,11 @@ import {
   getUserId,
   loadStyleSheet,
   loadGlobalStyleSheet,
-  createTimeString,
 } from '../utils.js';
 
 export class RaceRecord extends HTMLElement {
   constructor() {
     super();
-    this.timerStartDate = null;
     this.raceResults = [];
   }
 
@@ -69,32 +67,21 @@ export class RaceRecord extends HTMLElement {
       this.buttonRecordTime,
     );
 
-    this.getTimer();
+    this.timer = document.querySelector('race-timer');
 
     this.shadow.append(this.sectionRaceResults);
   }
 
-  async getTimer() {
-    const response = await fetch(`/api/v1/timer`);
-    if (response.ok) {
-      const timer = await response.json();
-      this.timerStartDate = timer.timerStartDate;
-    } else {
-      console.log('failed to send message', response);
-    }
-  }
-
   recordTimerButton() {
-    if (this.timerStartDate !== null) {
+    if (this.timer.startDate !== null) {
       this.buttonClearRaceResults.hidden = false;
       this.buttonSubmitResults.hidden = false;
       this.paragraphFeedback.textContent = '';
 
-      const timeString = createTimeString(this.timerStartDate);
-      this.raceResults.push(timeString);
+      this.raceResults.push(this.timer.timeString);
 
       const record = document.createElement('li');
-      record.textContent = timeString;
+      record.textContent = this.timer.timeString;
       this.olRaceResults.prepend(record);
     } else {
       setErrorColour(this.paragraphFeedback);
