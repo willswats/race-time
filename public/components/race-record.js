@@ -78,8 +78,7 @@ export class RaceRecord extends HTMLElement {
       this.buttonSubmitResults.hidden = false;
       this.paragraphFeedback.textContent = '';
 
-      // unshift instead of append so that race results can appear at the top of the ordered list
-      this.raceResults.unshift(this.timer.timeString);
+      this.raceResults.push(this.timer.timeString);
 
       const record = document.createElement('li');
       record.textContent = this.timer.timeString;
@@ -121,8 +120,7 @@ export class RaceRecord extends HTMLElement {
   }
 
   async submitTime() {
-    // reverse the race results as unshift was used and not append
-    const payload = { raceResults: this.raceResults.reverse() };
+    const payload = { raceResults: this.raceResults };
     const userId = getUserId();
 
     const response = await fetch(`/api/v1/race-results?userId=${userId}`, {
