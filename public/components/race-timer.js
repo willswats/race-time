@@ -87,8 +87,10 @@ export class RaceTimer extends HTMLElement {
     if (response.ok) {
       const timer = await response.json();
       this.startDate = timer.timerStartDate;
-      this.buttonStartTimer.hidden = true;
-      this.buttonStopTimer.hidden = false;
+      if (this.startDate !== null) {
+        this.buttonStartTimer.hidden = true;
+        this.buttonStopTimer.hidden = false;
+      }
     } else {
       console.log('failed to send message', response);
     }
@@ -105,9 +107,10 @@ export class RaceTimer extends HTMLElement {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    console.log(response);
 
     if (response.ok) {
+      const timer = await response.json();
+      console.log(timer);
       this.startDate = startDate;
       this.buttonStartTimer.hidden = true;
       this.buttonStopTimer.hidden = false;
@@ -115,7 +118,6 @@ export class RaceTimer extends HTMLElement {
       setSuccessColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Successfully submitted!';
     } else if (response.status === 403) {
-      console.log(response);
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
         "You role doesn't have permission to perform this action!";
@@ -127,12 +129,14 @@ export class RaceTimer extends HTMLElement {
   }
 
   async stopTimer() {
+    const payload = { startDate: null };
     const userId = getUserId();
 
     const response = await fetch(`/api/v1/timer?userId=${userId}`, {
-      method: 'DELETE',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
-    console.log(response);
 
     if (response.ok) {
       this.startDate = null;

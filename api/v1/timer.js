@@ -20,18 +20,10 @@ export async function getTimer() {
   return timer;
 }
 
-export async function addTimer(startDate) {
+export async function updateTimer(startDate) {
   const db = await dbConn;
 
-  await db.run('INSERT INTO timer VALUES (?)', [startDate]);
-
-  return getTimer();
-}
-
-export async function deleteTimer() {
-  const db = await dbConn;
-
-  await db.run('DELETE FROM timer;');
+  await db.run('UPDATE timer SET timer_start_date = (?)', [startDate]);
 
   return getTimer();
 }

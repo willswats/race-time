@@ -12,7 +12,7 @@ import {
 } from './api/v1/race-results.js';
 
 import { getUser } from './api/v1/users.js';
-import { addTimer, deleteTimer, getTimer } from './api/v1/timer.js';
+import { getTimer, updateTimer } from './api/v1/timer.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -57,13 +57,8 @@ async function apiGetTimer(_, res) {
   res.json(timer);
 }
 
-async function apiAddTimer(req, res) {
-  const timer = await addTimer(req.body.startDate);
-  res.json(timer);
-}
-
-async function apiDeleteTimer(_, res) {
-  const timer = await deleteTimer();
+async function apiUpdateTimer(req, res) {
+  const timer = await updateTimer(req.body.startDate);
   res.json(timer);
 }
 
@@ -110,13 +105,7 @@ app.post(
   '/api/v1/timer',
   checkRole([ROLES.MARSHAL, ROLES.ORGANISER]),
   express.json(),
-  apiAddTimer,
-);
-app.delete(
-  '/api/v1/timer',
-  checkRole([ROLES.MARSHAL, ROLES.ORGANISER]),
-  express.json(),
-  apiDeleteTimer,
+  apiUpdateTimer,
 );
 
 app.all('*', notFound);

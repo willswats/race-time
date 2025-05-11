@@ -15,6 +15,11 @@ CREATE TABLE race_result (
 
 CREATE TABLE timer (timer_start_date TEXT);
 
+INSERT INTO
+    timer
+VALUES
+    (NULL);
+
 CREATE TABLE users (user_id CHAR(36), user_role TEXT);
 
 INSERT INTO
