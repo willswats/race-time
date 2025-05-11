@@ -30,7 +30,6 @@ export class RaceTimer extends HTMLElement {
 
     this.buttonStopTimer = document.createElement('button');
     this.buttonStopTimer.textContent = 'Stop';
-    this.buttonStopTimer.hidden = true;
 
     this.buttonStartTimer.addEventListener('click', this.startTimer.bind(this));
     this.buttonStopTimer.addEventListener(
@@ -82,23 +81,32 @@ export class RaceTimer extends HTMLElement {
     this.paragraphTimerText.textContent = this.timeString;
   }
 
+  showStartButton() {
+    this.buttonStartTimer.hidden = false;
+    this.buttonStopTimer.hidden = true;
+  }
+
+  showStopButton() {
+    this.buttonStartTimer.hidden = true;
+    this.buttonStopTimer.hidden = false;
+  }
+
   async getTimer() {
     const response = await fetch(`/api/v1/timer`);
     if (response.ok) {
       const timer = await response.json();
       this.startDate = timer.timerStartDate;
       if (this.startDate !== null) {
-        this.buttonStartTimer.hidden = true;
-        this.buttonStopTimer.hidden = false;
+        this.showStopButton();
+      } else {
+        this.showStartButton();
       }
     } else {
       console.log('failed to send message', response);
     }
   }
 
-  async startTimer() {
-    const startDate = Date.now();
-
+  async setTimerStartDate(startDate) {
     const payload = { startDate };
     const userId = getUserId();
 
@@ -108,49 +116,45 @@ export class RaceTimer extends HTMLElement {
       body: JSON.stringify(payload),
     });
 
+    return response;
+  }
+
+  async startTimer() {
+    const startDate = Date.now();
+
+    const response = await this.setTimerStartDate(startDate);
+
     if (response.ok) {
-      const timer = await response.json();
-      console.log(timer);
       this.startDate = startDate;
-      this.buttonStartTimer.hidden = true;
-      this.buttonStopTimer.hidden = false;
+      this.showStopButton();
 
       setSuccessColour(this.paragraphFeedback);
-      this.paragraphFeedback.textContent = 'Successfully submitted!';
+      this.paragraphFeedback.textContent = 'Successfully started the timer!';
     } else if (response.status === 403) {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
         "You role doesn't have permission to perform this action!";
     } else {
-      console.log(response);
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Failed to send message!';
     }
   }
 
   async stopTimer() {
-    const payload = { startDate: null };
-    const userId = getUserId();
-
-    const response = await fetch(`/api/v1/timer?userId=${userId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    const startDate = null;
+    const response = await this.setTimerStartDate(startDate);
 
     if (response.ok) {
-      this.startDate = null;
-      this.buttonStartTimer.hidden = false;
-      this.buttonStopTimer.hidden = true;
+      this.startDate = startDate;
+      this.showStartButton();
 
       setSuccessColour(this.paragraphFeedback);
-      this.paragraphFeedback.textContent = 'Successfully submitted!';
+      this.paragraphFeedback.textContent = 'Successfully stopped the timer!';
     } else if (response.status === 403) {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
         "You role doesn't have permission to perform this action!";
     } else {
-      console.log(response);
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Failed to send message!';
     }
