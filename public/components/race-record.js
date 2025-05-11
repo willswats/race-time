@@ -10,7 +10,6 @@ import {
 export class RaceRecord extends HTMLElement {
   constructor() {
     super();
-    this.timer = document.querySelector('race-timer');
     this.raceResults = [];
   }
 
@@ -67,6 +66,8 @@ export class RaceRecord extends HTMLElement {
       this.olRaceResults,
       this.buttonRecordTime,
     );
+
+    this.timer = document.querySelector('race-timer');
 
     this.shadow.append(this.sectionRaceResults);
   }
