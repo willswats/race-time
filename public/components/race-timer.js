@@ -49,12 +49,13 @@ export class RaceTimer extends HTMLElement {
     );
 
     this.paragraphFeedback = document.createElement('p');
+    this.paragraphFeedback.id = 'feedback';
 
     this.sectionTimer = document.createElement('section');
     this.sectionTimer.id = 'timer';
     this.sectionTimer.append(
-      this.sectionTimerTime,
       this.paragraphFeedback,
+      this.sectionTimerTime,
       this.sectionTimerButtons,
     );
 
@@ -84,11 +85,13 @@ export class RaceTimer extends HTMLElement {
   showStartButton() {
     this.buttonStartTimer.hidden = false;
     this.buttonStopTimer.hidden = true;
+    this.paragraphFeedback.textContent = 'Click start to start the timer!';
   }
 
   showStopButton() {
     this.buttonStartTimer.hidden = true;
     this.buttonStopTimer.hidden = false;
+    this.paragraphFeedback.textContent = 'Click stop to stop the timer!';
   }
 
   async getTimer() {

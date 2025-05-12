@@ -61,8 +61,8 @@ export class RaceRecord extends HTMLElement {
     this.sectionRaceResults = document.createElement('section');
     this.sectionRaceResults.id = 'timer-results';
     this.sectionRaceResults.append(
-      this.sectionRaceResultsButtons,
       this.paragraphFeedback,
+      this.sectionRaceResultsButtons,
       this.olRaceResults,
       this.buttonRecordTime,
     );

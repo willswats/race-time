@@ -31,6 +31,13 @@
   display: flex;
 }
 
+#feedback {
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
 button {
   background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
