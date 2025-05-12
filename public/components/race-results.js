@@ -36,10 +36,15 @@ export class RaceResults extends HTMLElement {
 
     for (const race of allRaceResults) {
       const raceH1 = document.createElement('h1');
-      raceH1.textContent = new Date(race.raceResultsTime).toLocaleDateString();
+      console.log(race);
+      raceH1.textContent = new Date(
+        race.raceResultsTimerStartDate,
+      ).toLocaleDateString();
 
       const raceH2 = document.createElement('h2');
-      raceH2.textContent = new Date(race.raceResultsTime).toLocaleTimeString();
+      raceH2.textContent = new Date(
+        race.raceResultsTimerStartDate,
+      ).toLocaleTimeString();
 
       const raceOl = document.createElement('ol');
 

@@ -45,7 +45,10 @@ async function apiGetAllRaceResults(_, res) {
 
 async function apiAddRaceResults(req, res, next) {
   try {
-    const newRaceResults = await addRaceResults(req.body.raceResults);
+    const newRaceResults = await addRaceResults(
+      req.body.raceResults,
+      req.body.raceResultsTimerStartDate,
+    );
     res.json(newRaceResults);
   } catch (error) {
     next(error);

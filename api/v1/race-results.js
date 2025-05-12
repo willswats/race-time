@@ -37,7 +37,7 @@ export async function getAllRaceResults() {
     `
     SELECT 
       race_results.race_results_id AS raceResultsId,
-      race_results.race_results_time AS raceResultsTime,
+      race_results.race_results_timer_start_date AS raceResultsTimerStartDate,
       json_group_array(
         json_object(
             'raceResultId', race_result.race_result_id,
@@ -47,19 +47,18 @@ export async function getAllRaceResults() {
     FROM race_results 
       INNER JOIN race_result ON race_results.race_result_id = race_result.race_result_id
     GROUP BY
-      race_results.race_results_time
+      race_results.race_results_timer_start_date
     ORDER BY
-      race_results.race_results_time desc;
+      race_results.race_results_timer_start_date desc;
     `,
   );
 }
 
-export async function addRaceResults(raceResults) {
+export async function addRaceResults(raceResults, raceResultsTimerStartDate) {
   if (raceResults.length === 0)
     throw new Error('Must submit at least one race result!');
 
   const db = await dbConn;
-  const raceResultsTime = new Date().toISOString();
 
   for (const raceResult of raceResults) {
     const raceResultId = uuid();
@@ -73,7 +72,7 @@ export async function addRaceResults(raceResults) {
     const raceResultsId = uuid();
     await db.run('INSERT INTO race_results VALUES (?, ?, ?)', [
       raceResultsId,
-      raceResultsTime,
+      raceResultsTimerStartDate,
       raceResultId,
     ]);
   }
