@@ -122,6 +122,8 @@ export class RaceRecord extends HTMLElement {
     });
 
     if (response.ok) {
+      this.clearRaceResults();
+
       setSuccessColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Successfully submitted!';
     } else if (response.status === 403) {
@@ -141,7 +143,6 @@ export class RaceRecord extends HTMLElement {
 
     if (confirm) {
       this.submitTime();
-      this.clearRaceResults();
     }
   }
 }
