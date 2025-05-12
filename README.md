@@ -49,7 +49,7 @@ To selectively show parts of the UI, the `setupNavButtons()` function in `public
 
 In the bottom-left of the screen, change your role to organiser, then click the "Timer" button in nav to open the race timer. To start the timer, click the start button. To stop the timer click the stop button, and then click 'Ok' on the prompt.
 
-The `race-timer` component calls `getTimer()` when it is added to the document, this performs a GET request for the timer in the database, and sets the start date to the start date stored in the database. The timer table in the database is one row `timerStartDate`, which is `null` by default. The `startTimer()` method is called when the user clicks start, this sets the `timerStartDate` in the database to `Date.now()`, `stopTimer()` does the same but sets it to `null`. The `timeString` used in the UI is created through the use of the `timerStartDate`.
+The `race-timer` component calls `getTimer()` when it is added to the document, this performs a `GET` request for the timer in the database, and sets the start date to the start date stored in the database. The timer table in the database is one row `timerStartDate`, which is `null` by default. The `startTimer()` method is called when the user clicks start, this sets the `timerStartDate` in the database to `Date.now()`, `stopTimer()` does the same but sets it to `null`. The `timeString` used in the UI is created through the use of the `timerStartDate`.
 
 ### Record Screen/Record runners who cross the finish line
 
@@ -57,13 +57,13 @@ In the bottom-left of the screen, change your role to organiser, click on the ti
 
 The record button uses a reference to the timer with the use of `document.querySelector` to get the `timeString` from the `race-timer` component, which it then adds to a `raceResults` array with `push`. It then creates an `<li>` element with the `textContent` set to the timer's `timeString`, which it `prepend`'s to the `<ol>` element.I am using `prepend` instead of `append` so that the element appears at the top of the ordered list, this ensures that the user will always receive visual feedback upon clicking the record button.
 
-The submit button calls `submitTime()` which sends a `POST` request to the server with the `userId` attached as a query parameter as this action can only be performed by users who are organisers or marshals.
+The submit button calls `submitTime()` which sends a `POST` request to the server with the `userId` attached as a query parameter as this action can only be performed by users who are organisers or marshals. The payload contains the `raceResults` and the `raceResultsTimerStartDate`. The `raceResultsTimerStartDate` is set to the timer's `startDate` so that it can be used in the `GROUP BY` when getting all the race results from the database (in the API at `/api/v1/race-results` with the `getAllRaceResults()` function), this allows for multiple marshals to record and submit race results, as they can be merged into based upon the `raceResultsTimerStartDate`.
 
 ### Results/View all race results
 
 Click the "Results" button in the nav to open the race results screen. This screen shows all the results that have been recorded and submitted my marshals or organisers on the "Record" screen. Click on an individual race result to view the first name and last name of the race result (if they have been set by a marshal or organiser, otherwise it will be empty).
 
-The race results screen gets all the race results from the database through a fetch request to the server, it then constructs the race `<section>` elements for each race, as well as a `<li>` and `<button>` for each race result. If there are no race results, then the place holder element is shown, which states that there are no race results. All of the buttons have an event listener for appending the `?raceResultId` parameter to the URL along with the race id.
+The race results screen gets all the race results from the database through a fetch request to the server. The server responds with all the race results, grouped by the `race_results_timer_start_date`, this allows for marshals to submit results separately and have them merged into one. It then constructs the race `<section>` elements for each race, as well as a `<li>` and `<button>` for each race result. If there are no race results, then the place holder element is shown, which states that there are no race results. All of the buttons have an event listener for appending the `?raceResultId` parameter to the URL along with the race id.
 
 ### Result/View a specific race result and edit the names
 
