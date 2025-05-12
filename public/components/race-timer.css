@@ -55,7 +55,7 @@ button:hover {
 @media screen and (max-width: 768px) {
   #timer {
     width: 18rem;
-    height: 12rem;
+    height: 18rem;
     padding: 1rem;
   }
 
