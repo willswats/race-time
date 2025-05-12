@@ -23,7 +23,7 @@
 //   return c.put(request, response);
 // }
 
-const CACHE = 'race-time';
+const CACHE = 'race-time-v5';
 const CACHEABLE = [
   './',
   './sw.js',
@@ -58,3 +58,21 @@ async function prepareCache() {
 // install the event listener so it can run in the background.
 self.addEventListener('install', prepareCache);
 // self.addEventListener('fetch', interceptFetch);
+//
+
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    (async () => {
+      const r = await caches.match(e.request);
+      console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
+      if (r) {
+        return r;
+      }
+      const response = await fetch(e.request);
+      const cache = await caches.open(CACHE);
+      console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
+      cache.put(e.request, response.clone());
+      return response;
+    })(),
+  );
+});
