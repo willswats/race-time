@@ -23,7 +23,7 @@
 //   return c.put(request, response);
 // }
 
-const CACHE = 'race-time-v5';
+const CACHE = 'race-time-v1.0';
 const CACHEABLE = [
   './',
   './sw.js',
@@ -55,6 +55,13 @@ async function prepareCache() {
   console.log('Cache prepared.');
 }
 
-// install the event listener so it can run in the background.
+// Install the event listener so it can run in the background.
 self.addEventListener('install', prepareCache);
-// self.addEventListener('fetch', interceptFetch);
+// Handle fetch requests
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
+    }),
+  );
+});
