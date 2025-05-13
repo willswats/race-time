@@ -53,6 +53,8 @@ The `race-timer` component calls `initTimer()` when it is added to the document,
 
 The `startTimer()` method is called when the user clicks start, this sets the `timerStartDate` in the database to `Date.now()`, `stopTimer()` does the same but sets it to `null`. The `timeString` used in the UI is created through the use of the `timerStartDate` by using the function `createTimeString` at `public/utils.js`.
 
+The timer stores the `timerStartDate` in local storage as a fallback, this makes it possible for an organiser or marshal to continue recording race results, even if there is no connection to the server, as long as they have retrieved the `timerStartDate` whilst connected to the server before.
+
 ### Record Screen/Record runners who cross the finish line
 
 In the bottom-left of the screen, change your role to organiser, click on the timer button in the nav, click start on the timer, then navigate to the record page, you can now record times by clicking record. You can submit your times to the database by clicking "Submit" and you can clear the local results by clicking "Clear". If you do not start the timer before clicking record, an error message will appear on the UI and you will not be able to record any times. After clicking start on the timer, you can freely change your role to marshal.
