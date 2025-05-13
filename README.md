@@ -370,6 +370,85 @@ app.listen(port, () => {
 
 The chatbot told me that `req.user` is undefined, because HTTP is stateless so `req.user` won't carry over to the next request, it then provided several solutions, however, two of them were using external libraries that we are not allowed to use. I opted for the solution that it called a "Quick fix (just for testing)", because this application does not need proper authentication as it is assumed that it would be handled by a third party. This solution involved adding `getUser` to the `checkRole` function, therefore, it required me to add the `userId` to the URL in each fetch request on the client where the route is protected (as seen with the `submitTime` function at `public/components/race-record.js` and the `submitRaceResultNames` function at `public/components/race-result.js`)
 
+### Prompts to develop the `public/sw.js` file
+
+```text
+how to make this service worker not intercept fetch if /api/ is in the url?
+
+function interceptFetch(evt) {
+  evt.respondWith(handleFetch(evt.request));
+  evt.waitUntil(updateCache(evt.request));
+}
+
+/* Retrieve a requested resource from the cache
+ * or return a resolved promise if its not there.
+ */
+async function handleFetch(request) {
+  const c = await caches.open(CACHE);
+  const cachedCopy = await c.match(request);
+  return cachedCopy || Promise.reject(new Error('no-match'));
+}
+
+/* Invoke the default fetch capability to
+ * pull a resource over the network and use
+ * that to update the cache.
+ */
+async function updateCache(request) {
+  const c = await caches.open(CACHE);
+  const response = await fetch(request);
+  console.log('Updating cache ', request.url);
+  return c.put(request, response);
+}
+
+const CACHE = 'race-time-v1.0';
+const CACHEABLE = [
+  '/',
+  '/sw.js',
+  '/register-sw.js',
+  '/index.html',
+  '/index.js',
+  '/utils.js',
+  '/index.css',
+  '/home.css',
+  '/globals.css',
+  '/manifest.json',
+  '/img/192.png',
+  '/img/512.png',
+  '/screens/home.inc',
+  '/screens/race-timer.inc',
+  '/screens/race-results.inc',
+  '/screens/race-result.inc',
+  '/screens/race-record.inc',
+  '/screens/error.inc',
+  '/components/race-timer.js',
+  '/components/race-timer.css',
+  '/components/race-results.js',
+  '/components/race-results.css',
+  '/components/race-result.js',
+  '/components/race-result.css',
+  '/components/race-record.js',
+  '/components/race-record.css',
+  '/components/role-drop-down.js',
+  '/components/role-drop-down.css',
+  '/components/custom-alert.js',
+  '/components/custom-alert.css',
+];
+
+/* Prepare and populate a cache. */
+async function prepareCache() {
+  const c = await caches.open(CACHE);
+  await c.addAll(CACHEABLE);
+  console.log('Cache prepared.');
+}
+
+// Install the event listener so it can run in the background.
+self.addEventListener('install', prepareCache);
+// Handle fetch requests
+self.addEventListener('fetch', interceptFetch);
+```
+
+I didn't want the fetches to the API intercepted by the service worker, because I'm not storing any of that data in the cache, it would error. The chatbot provided me with an if statement to add to the `interceptFetch()` and it is what I used.
+
 ## 9.3 Discusses why and how you have improved your artefact since the prototype deadline
 
 While developing this application, it went through several iterations. After the Easter break, I had an app which had the `race-timer` and the `race-results` components on the same page, and then a separate page for the race results. After learning that the app requires roles, I re-structured it so that the `race-results` component is on a separate screen, as this makes it easier to selectively hide the page depending upon the role. Moreover, this allowed me to increase the size of certain elements, which is important because the app is expected to be used by older people out in cold weather.
