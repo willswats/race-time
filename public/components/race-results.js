@@ -35,7 +35,6 @@ export class RaceResults extends HTMLElement {
 
     for (const race of allRaceResults) {
       const raceH1 = document.createElement('h1');
-      console.log(race);
       raceH1.textContent = new Date(
         race.raceResultsTimerStartDate,
       ).toLocaleDateString();
