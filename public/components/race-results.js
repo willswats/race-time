@@ -30,6 +30,13 @@ export class RaceResults extends HTMLElement {
     await this.addRaceSections();
   }
 
+  showPlaceHolder(text) {
+    if (this.raceSections.length < 1) {
+      this.placeHolderSection.hidden = false;
+      this.placeHolderParagraph.textContent = text;
+    }
+  }
+
   async addRaceSections() {
     const allRaceResults = await this.getAllRaceResults();
 
@@ -70,9 +77,7 @@ export class RaceResults extends HTMLElement {
       this.shadow.append(raceSection);
     }
 
-    if (this.raceSections.length < 1) {
-      this.placeHolderSection.hidden = false;
-    }
+    this.showPlaceHolder('No race results found!');
   }
 
   appendParamToUrl(raceResultsId) {
@@ -80,13 +85,17 @@ export class RaceResults extends HTMLElement {
   }
 
   async getAllRaceResults() {
-    const response = await fetch('/api/v1/race-results');
+    try {
+      const response = await fetch('/api/v1/race-results');
 
-    if (response.ok) {
-      const allRaceResults = await response.json();
-      return allRaceResults;
-    } else {
-      console.log('failed to send message', response);
+      if (response.ok) {
+        const allRaceResults = await response.json();
+        return allRaceResults;
+      } else {
+        console.log('failed to send message', response);
+      }
+    } catch (e) {
+      this.showPlaceHolder('Failed to fetch!');
     }
   }
 }
