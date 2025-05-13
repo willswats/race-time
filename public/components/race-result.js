@@ -1,11 +1,12 @@
 import {
   setSuccessColour,
   setErrorColour,
-  getUserId,
   getUserRole,
+  getRaceResult,
   loadStyleSheet,
   loadGlobalStyleSheet,
   ROLES,
+  addRaceResultNames,
 } from '../utils.js';
 
 export class RaceResult extends HTMLElement {
@@ -66,22 +67,12 @@ export class RaceResult extends HTMLElement {
     const urlParams = new URLSearchParams(window.location.search);
     this.raceResultId = urlParams.get('raceResultId');
     if (this.raceResultId) {
-      this.raceResult = await this.getRaceResult();
-      this.inputFirstName.value = this.raceResult.raceResultFirstName;
-      this.inputLastName.value = this.raceResult.raceResultLastName;
-    }
-  }
-
-  async getRaceResult() {
-    const response = await fetch(
-      `/api/v1/race-result?raceResultId=${this.raceResultId}`,
-    );
-
-    if (response.ok) {
-      const raceResult = await response.json();
-      return raceResult;
-    } else {
-      console.log('failed to send message', response);
+      const response = await getRaceResult(this.raceResultId);
+      if (response.ok) {
+        this.raceResult = await response.json();
+        this.inputFirstName.value = this.raceResult.raceResultFirstName;
+        this.inputLastName.value = this.raceResult.raceResultLastName;
+      }
     }
   }
 
@@ -98,14 +89,11 @@ export class RaceResult extends HTMLElement {
       return;
     }
 
-    const payload = { raceResultId, raceResultFirstName, raceResultLastName };
-    const userId = getUserId();
-
-    const response = await fetch(`/api/v1/race-result?userId=${userId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    const response = await addRaceResultNames(
+      raceResultId,
+      raceResultFirstName,
+      raceResultLastName,
+    );
 
     if (response.ok) {
       setSuccessColour(this.paragraphFeedback);
@@ -114,6 +102,9 @@ export class RaceResult extends HTMLElement {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
         "You role doesn't have permission to perform this action!";
+    } else if (response.type === 'error') {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'No connection to server!';
     } else {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Failed to send message!';

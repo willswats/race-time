@@ -2,7 +2,7 @@ import {
   setSuccessColour,
   setErrorColour,
   customAlert,
-  getUserId,
+  addRaceResults,
   loadStyleSheet,
   loadGlobalStyleSheet,
 } from '../utils.js';
@@ -135,18 +135,10 @@ export class RaceRecord extends HTMLElement {
   }
 
   async submitTime() {
-    const payload = {
-      raceResults: this.raceResults,
-      raceResultsTimerStartDate: this.timer.startDate,
-    };
-    const userId = getUserId();
-
-    const response = await fetch(`/api/v1/race-results?userId=${userId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
+    const response = await addRaceResults(
+      this.raceResults,
+      this.timer.startDate,
+    );
     if (response.ok) {
       this.clearRaceResults();
 
@@ -156,6 +148,9 @@ export class RaceRecord extends HTMLElement {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
         "You role doesn't have permission to perform this action!";
+    } else if (response.type === 'error') {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'No connection to server!';
     } else {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Failed to send message!';

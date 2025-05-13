@@ -93,3 +93,88 @@ export function createTimeString(startDate) {
   const timeString = `${padToDigits(2, hours)}:${padToDigits(2, minutes)}:${padToDigits(2, seconds)}`;
   return timeString;
 }
+
+export async function getAllRaceResults() {
+  try {
+    const response = await fetch('/api/v1/race-results');
+    return response;
+  } catch (error) {
+    return Response.error();
+  }
+}
+
+export async function getRaceResult(raceResultId) {
+  try {
+    const response = await fetch(
+      `/api/v1/race-result?raceResultId=${raceResultId}`,
+    );
+    return response;
+  } catch (error) {
+    return Response.error();
+  }
+}
+
+export async function addRaceResults(raceResults, raceResultsTimerStartDate) {
+  const payload = {
+    raceResults,
+    raceResultsTimerStartDate,
+  };
+
+  const userId = getUserId();
+
+  try {
+    const response = await fetch(`/api/v1/race-results?userId=${userId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return response;
+  } catch (error) {
+    return Response.error();
+  }
+}
+
+export async function addRaceResultNames(
+  raceResultId,
+  raceResultFirstName,
+  raceResultLastName,
+) {
+  const payload = { raceResultId, raceResultFirstName, raceResultLastName };
+  const userId = getUserId();
+
+  try {
+    const response = await fetch(`/api/v1/race-result?userId=${userId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return response;
+  } catch (error) {
+    return Response.error();
+  }
+}
+
+export async function getTimer() {
+  try {
+    const response = await fetch(`/api/v1/timer`);
+    return response;
+  } catch (error) {
+    return Response.error();
+  }
+}
+
+export async function setTimerStartDate(startDate) {
+  const payload = { startDate };
+  const userId = getUserId();
+
+  try {
+    const response = await fetch(`/api/v1/timer?userId=${userId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return response;
+  } catch (error) {
+    return Response.error();
+  }
+}

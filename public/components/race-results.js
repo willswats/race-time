@@ -1,6 +1,10 @@
 import { addEventListenersChangeContentRefresh } from '../index.js';
 
-import { loadStyleSheet, loadGlobalStyleSheet } from '../utils.js';
+import {
+  loadStyleSheet,
+  loadGlobalStyleSheet,
+  getAllRaceResults,
+} from '../utils.js';
 
 export class RaceResults extends HTMLElement {
   constructor() {
@@ -38,65 +42,55 @@ export class RaceResults extends HTMLElement {
   }
 
   async addRaceSections() {
-    const allRaceResults = await this.getAllRaceResults();
+    const response = await getAllRaceResults();
+    if (response.ok) {
+      const allRaceResults = await response.json();
 
-    for (const race of allRaceResults) {
-      const raceH1 = document.createElement('h1');
-      raceH1.textContent = new Date(
-        race.raceResultsTimerStartDate,
-      ).toLocaleDateString();
+      for (const race of allRaceResults) {
+        const raceH1 = document.createElement('h1');
+        raceH1.textContent = new Date(
+          race.raceResultsTimerStartDate,
+        ).toLocaleDateString();
 
-      const raceH2 = document.createElement('h2');
-      raceH2.textContent = new Date(
-        race.raceResultsTimerStartDate,
-      ).toLocaleTimeString();
+        const raceH2 = document.createElement('h2');
+        raceH2.textContent = new Date(
+          race.raceResultsTimerStartDate,
+        ).toLocaleTimeString();
 
-      const raceOl = document.createElement('ol');
+        const raceOl = document.createElement('ol');
 
-      const raceResults = JSON.parse(race.raceResults);
-      for (const raceResult of raceResults) {
-        const resultLi = document.createElement('li');
+        const raceResults = JSON.parse(race.raceResults);
+        for (const raceResult of raceResults) {
+          const resultLi = document.createElement('li');
 
-        const resultButton = document.createElement('button');
-        resultButton.id = raceResult.raceResultId;
-        resultButton.textContent = raceResult.raceResult;
-        resultButton.dataset.screen = 'race-result';
-        addEventListenersChangeContentRefresh(resultButton, 'click');
-        resultButton.addEventListener('click', () => {
-          this.appendParamToUrl(raceResult.raceResultId);
-        });
-        resultLi.append(resultButton);
+          const resultButton = document.createElement('button');
+          resultButton.id = raceResult.raceResultId;
+          resultButton.textContent = raceResult.raceResult;
+          resultButton.dataset.screen = 'race-result';
+          addEventListenersChangeContentRefresh(resultButton, 'click');
+          resultButton.addEventListener('click', () => {
+            this.appendParamToUrl(raceResult.raceResultId);
+          });
+          resultLi.append(resultButton);
 
-        raceOl.appendChild(resultLi);
+          raceOl.appendChild(resultLi);
+        }
+
+        const raceSection = document.createElement('section');
+        raceSection.append(raceH1, raceH2, raceOl);
+        this.raceSections.push(raceSection);
+
+        this.shadow.append(raceSection);
       }
 
-      const raceSection = document.createElement('section');
-      raceSection.append(raceH1, raceH2, raceOl);
-      this.raceSections.push(raceSection);
-
-      this.shadow.append(raceSection);
+      this.showPlaceHolder('No race results found!');
+    } else if (response.type === 'error') {
+      this.showPlaceHolder('Failed to fetch!');
     }
-
-    this.showPlaceHolder('No race results found!');
   }
 
   appendParamToUrl(raceResultsId) {
     window.history.replaceState(null, null, `?raceResultId=${raceResultsId}`);
-  }
-
-  async getAllRaceResults() {
-    try {
-      const response = await fetch('/api/v1/race-results');
-
-      if (response.ok) {
-        const allRaceResults = await response.json();
-        return allRaceResults;
-      } else {
-        console.log('failed to send message', response);
-      }
-    } catch (e) {
-      this.showPlaceHolder('Failed to fetch!');
-    }
   }
 }
 

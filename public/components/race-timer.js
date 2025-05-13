@@ -3,9 +3,10 @@ import {
   customAlert,
   loadStyleSheet,
   loadGlobalStyleSheet,
-  getUserId,
   setSuccessColour,
   setErrorColour,
+  getTimer,
+  setTimerStartDate,
 } from '../utils.js';
 
 export class RaceTimer extends HTMLElement {
@@ -60,7 +61,7 @@ export class RaceTimer extends HTMLElement {
     );
 
     this.showStartButton();
-    this.getTimer();
+    await this.initTimer();
 
     this.shadow.append(this.sectionTimer);
 
@@ -95,8 +96,8 @@ export class RaceTimer extends HTMLElement {
     this.paragraphFeedback.textContent = 'Click stop to stop the timer!';
   }
 
-  async getTimer() {
-    const response = await fetch(`/api/v1/timer`);
+  async initTimer() {
+    const response = await getTimer();
     if (response.ok) {
       const timer = await response.json();
       this.startDate = timer.timerStartDate;
@@ -105,29 +106,18 @@ export class RaceTimer extends HTMLElement {
       } else {
         this.showStartButton();
       }
-    } else {
-      console.log('failed to send message', response);
+    } else if (response.type === 'error') {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'No connection to server!';
     }
-  }
-
-  async setTimerStartDate(startDate) {
-    const payload = { startDate };
-    const userId = getUserId();
-
-    const response = await fetch(`/api/v1/timer?userId=${userId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
-    return response;
   }
 
   async startTimer() {
     const startDate = Date.now();
 
-    const response = await this.setTimerStartDate(startDate);
+    const response = await setTimerStartDate(startDate);
 
+    console.log(response);
     if (response.ok) {
       this.startDate = startDate;
       this.showStopButton();
@@ -138,6 +128,9 @@ export class RaceTimer extends HTMLElement {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
         "You role doesn't have permission to perform this action!";
+    } else if (response.type === 'error') {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'No connection to server!';
     } else {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Failed to send message!';
@@ -146,7 +139,7 @@ export class RaceTimer extends HTMLElement {
 
   async stopTimer() {
     const startDate = null;
-    const response = await this.setTimerStartDate(startDate);
+    const response = await setTimerStartDate(startDate);
 
     if (response.ok) {
       this.startDate = startDate;
@@ -158,6 +151,9 @@ export class RaceTimer extends HTMLElement {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
         "You role doesn't have permission to perform this action!";
+    } else if (response.type === 'error') {
+      setErrorColour(this.paragraphFeedback);
+      this.paragraphFeedback.textContent = 'No connection to server!';
     } else {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'Failed to send message!';
