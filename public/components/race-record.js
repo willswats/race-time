@@ -69,7 +69,30 @@ export class RaceRecord extends HTMLElement {
 
     this.timer = document.querySelector('race-timer');
 
+    this.getRaceResultsFromStorage();
+
     this.shadow.append(this.sectionRaceResults);
+  }
+
+  getRaceResultsFromStorage() {
+    try {
+      const raceResults = JSON.parse(localStorage.getItem('raceResults'));
+      if (raceResults.length > 0) {
+        this.buttonClearRaceResults.hidden = false;
+        this.buttonSubmitResults.hidden = false;
+        this.paragraphFeedback.textContent = '';
+
+        this.raceResults = raceResults;
+
+        for (const raceResult of raceResults) {
+          const record = document.createElement('li');
+          record.textContent = raceResult;
+          this.olRaceResults.prepend(record);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   recordTimerButton() {
@@ -79,6 +102,7 @@ export class RaceRecord extends HTMLElement {
       this.paragraphFeedback.textContent = '';
 
       this.raceResults.push(this.timer.timeString);
+      localStorage.setItem('raceResults', JSON.stringify(this.raceResults));
 
       const record = document.createElement('li');
       record.textContent = this.timer.timeString;
@@ -95,6 +119,8 @@ export class RaceRecord extends HTMLElement {
     this.buttonSubmitResults.hidden = true;
 
     this.raceResults = [];
+    localStorage.removeItem('raceResults');
+
     this.olRaceResults.replaceChildren();
   }
 
