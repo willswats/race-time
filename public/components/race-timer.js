@@ -117,7 +117,6 @@ export class RaceTimer extends HTMLElement {
 
     const response = await setTimerStartDate(startDate);
 
-    console.log(response);
     if (response.ok) {
       this.startDate = startDate;
       this.showStopButton();

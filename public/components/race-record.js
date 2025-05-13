@@ -69,7 +69,7 @@ export class RaceRecord extends HTMLElement {
 
     this.timer = document.querySelector('race-timer');
 
-    this.getRaceResultsFromStorage();
+    this.getRaceResultsLocalStorage();
 
     this.shadow.append(this.sectionRaceResults);
   }
@@ -86,7 +86,7 @@ export class RaceRecord extends HTMLElement {
     this.olRaceResults.prepend(record);
   }
 
-  getRaceResultsFromStorage() {
+  getRaceResultsLocalStorage() {
     const localRaceResults = localStorage.getItem('raceResults');
     if (localRaceResults) {
       const raceResults = JSON.parse(localRaceResults);
