@@ -370,8 +370,8 @@ The chatbot told me that `req.user` is undefined, because HTTP is stateless so `
 
 ## 9.3 Discusses why and how you have improved your artefact since the prototype deadline
 
-While developing this application, it went through several iterations. After the Easter break, I had an app which had the `race-timer` and the `race-results` components on the same page, and then a separate page for the race results. After learning that the app requires roles, I re-structured it so that the `race-results` component is on a separate screen. Moreover, this allowed me to increase the size of certain elements, which is important because the app is expected to be used by older people out in cold weather.
+While developing this application, it went through several iterations. After the Easter break, I had an app which had the `race-timer` and the `race-results` components on the same page, and then a separate page for the race results. After learning that the app requires roles, I re-structured it so that the `race-results` component is on a separate screen, as this makes it easier to selectively hide the page depending upon the role. Moreover, this allowed me to increase the size of certain elements, which is important because the app is expected to be used by older people out in cold weather.
 
 ## 9.4 Reflects on the development as a whole, including your use of AI
 
-Using AI helped me to solve certain issues quicker, however, some times the code it provided was written poorly or did not work at all.
+Using AI helped me to solve certain issues quicker, however, some times the code it provided was written poorly or did not work at all. One example of this is when it provided code dealing with `Promises`, it would commonly use the `then` keyword instead of the newer and cleaner `async` and `await` syntax, this is likely because the chatbot has been trained on older JavaScript code.
