@@ -1,4 +1,11 @@
 function interceptFetch(evt) {
+  const requestUrl = evt.request.url;
+
+  // Skip interception if the URL contains '/api/'
+  if (requestUrl.includes('/api/')) {
+    return; // Let the browser handle this fetch normally
+  }
+
   evt.respondWith(handleFetch(evt.request));
   evt.waitUntil(updateCache(evt.request));
 }
