@@ -101,6 +101,8 @@ export class RaceTimer extends HTMLElement {
     if (response.ok) {
       const timer = await response.json();
       this.startDate = timer.timerStartDate;
+      localStorage.setItem('timerStartDate', this.startDate);
+
       if (this.startDate !== null) {
         this.showStopButton();
       } else {
@@ -109,6 +111,11 @@ export class RaceTimer extends HTMLElement {
     } else if (response.type === 'error') {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent = 'No connection to server!';
+
+      const timerStartDate = localStorage.getItem('timerStartDate');
+      if (timerStartDate) {
+        this.startDate = timerStartDate;
+      }
     }
   }
 
@@ -119,6 +126,7 @@ export class RaceTimer extends HTMLElement {
 
     if (response.ok) {
       this.startDate = startDate;
+      localStorage.setItem('timerStartDate', startDate);
       this.showStopButton();
 
       setSuccessColour(this.paragraphFeedback);
@@ -138,6 +146,7 @@ export class RaceTimer extends HTMLElement {
 
   async stopTimer() {
     const startDate = null;
+    localStorage.removeItem('timerStartDate');
     const response = await setTimerStartDate(startDate);
 
     if (response.ok) {
