@@ -1,6 +1,6 @@
 async function registerServiceWorker() {
   if (navigator.serviceWorker) {
-    await navigator.serviceWorker.register('./sw.js');
+    await navigator.serviceWorker.register('/sw.js');
   }
 }
 
