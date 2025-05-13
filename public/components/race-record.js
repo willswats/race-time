@@ -74,39 +74,41 @@ export class RaceRecord extends HTMLElement {
     this.shadow.append(this.sectionRaceResults);
   }
 
-  getRaceResultsFromStorage() {
-    try {
-      const raceResults = JSON.parse(localStorage.getItem('raceResults'));
-      if (raceResults.length > 0) {
-        this.buttonClearRaceResults.hidden = false;
-        this.buttonSubmitResults.hidden = false;
-        this.paragraphFeedback.textContent = '';
+  hideTopContent() {
+    this.buttonClearRaceResults.hidden = false;
+    this.buttonSubmitResults.hidden = false;
+    this.paragraphFeedback.textContent = '';
+  }
 
+  createRaceResultLi(content) {
+    const record = document.createElement('li');
+    record.textContent = content;
+    this.olRaceResults.prepend(record);
+  }
+
+  getRaceResultsFromStorage() {
+    const localRaceResults = localStorage.getItem('raceResults');
+    if (localRaceResults) {
+      const raceResults = JSON.parse(localRaceResults);
+      if (raceResults.length > 0) {
+        this.hideTopContent();
         this.raceResults = raceResults;
 
         for (const raceResult of raceResults) {
-          const record = document.createElement('li');
-          record.textContent = raceResult;
-          this.olRaceResults.prepend(record);
+          this.createRaceResultLi(raceResult);
         }
       }
-    } catch (e) {
-      console.log(e);
     }
   }
 
   recordTimerButton() {
     if (this.timer.startDate !== null) {
-      this.buttonClearRaceResults.hidden = false;
-      this.buttonSubmitResults.hidden = false;
-      this.paragraphFeedback.textContent = '';
+      this.hideTopContent();
 
       this.raceResults.push(this.timer.timeString);
       localStorage.setItem('raceResults', JSON.stringify(this.raceResults));
 
-      const record = document.createElement('li');
-      record.textContent = this.timer.timeString;
-      this.olRaceResults.prepend(record);
+      this.createRaceResultLi(this.timer.timeString);
     } else {
       setErrorColour(this.paragraphFeedback);
       this.paragraphFeedback.textContent =
