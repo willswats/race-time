@@ -59,6 +59,7 @@ export class RaceTimer extends HTMLElement {
       this.sectionTimerButtons,
     );
 
+    this.showStartButton();
     this.getTimer();
 
     this.shadow.append(this.sectionTimer);

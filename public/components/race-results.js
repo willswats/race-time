@@ -21,8 +21,7 @@ export class RaceResults extends HTMLElement {
     this.placeHolderSection.hidden = true;
 
     this.placeHolderParagraph = document.createElement('p');
-    this.placeHolderParagraph.textContent =
-      'There are currently no race results';
+    this.placeHolderParagraph.textContent = 'No race results found!';
 
     this.placeHolderSection.append(this.placeHolderParagraph);
 
