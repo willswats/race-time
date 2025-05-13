@@ -49,7 +49,7 @@ To selectively show parts of the UI, the `setupNavButtons()` function in `public
 
 In the bottom-left of the screen, change your role to organiser, then click the "Timer" button in nav to open the race timer. To start the timer, click the start button. To stop the timer click the stop button, and then click 'Ok' on the prompt.
 
-The `race-timer` component calls `getTimer()` when it is added to the document, this performs a `GET` request for the timer in the database, and sets the start date to the start date stored in the database, if it's null then it is not set. The timer table in the database is one row `timerStartDate`, which is `null` by default.
+The `race-timer` component calls `initTimer()` when it is added to the document, this performs a `GET` request for the timer in the database, and sets the start date to the start date stored in the database, if it's null then it is not set. The timer table in the database is one row `timerStartDate`, which is `null` by default.
 
 The `startTimer()` method is called when the user clicks start, this sets the `timerStartDate` in the database to `Date.now()`, `stopTimer()` does the same but sets it to `null`. The `timeString` used in the UI is created through the use of the `timerStartDate` by using the function `createTimeString` at `public/utils.js`.
 
