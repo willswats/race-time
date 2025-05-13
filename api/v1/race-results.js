@@ -1,4 +1,3 @@
-import uuid from 'uuid-random';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 
@@ -61,7 +60,7 @@ export async function addRaceResults(raceResults, raceResultsTimerStartDate) {
   const db = await dbConn;
 
   for (const raceResult of raceResults) {
-    const raceResultId = uuid();
+    const raceResultId = crypto.randomUUID();
     await db.run('INSERT INTO race_result VALUES (?, ?, ?, ?)', [
       raceResultId,
       raceResult,
@@ -69,7 +68,7 @@ export async function addRaceResults(raceResults, raceResultsTimerStartDate) {
       '',
     ]);
 
-    const raceResultsId = uuid();
+    const raceResultsId = crypto.randomUUID();
     await db.run('INSERT INTO race_results VALUES (?, ?, ?)', [
       raceResultsId,
       raceResultsTimerStartDate,
