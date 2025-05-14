@@ -93,7 +93,7 @@ The `custom-alert` `showAlert()` method returns a promise which is resolved if t
 
 You can install the web app on your device depending on the browser you are using in different ways, for Chrome see [here](https://support.google.com/chrome/answer/9658361?hl=en&co=GENIE.Platform%3DDesktop).
 
-Once the window loads, the service worker is registered, this is done in `public/register-sw.js`. It registers the `public/sw.js` file, which adds all the `public` files to the cache.
+Once the window loads, the service worker is registered, this is done in `public/register-sw.js`. It registers the `public/sw.js` file, which adds all the `public` files to the cache. It then intercepts any fetch requests, and if the request does not include `/api/`, then it attempts to retrieve the resource from the cache. It then updates the cache.
 
 ## 9.2 AI
 
