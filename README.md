@@ -69,7 +69,7 @@ The timer stores the `timerStartDate` in local storage as a fallback, this makes
 
 In the bottom-left of the screen, change your role to organiser, click on the timer button in the nav, click start on the timer, then navigate to the record page, you can now record times by clicking record. You can submit your times to the database by clicking "Submit" and you can clear the local results by clicking "Clear". If you do not start the timer before clicking record, an error message will appear on the UI and you will not be able to record any times. After clicking start on the timer, you can freely change your role to marshal.
 
-The record button calls the `recordTimerButton()` method, it uses a reference to the timer with the use of `document.querySelector` to get the `timeString` from the `race-timer` component, which it then adds to a `raceResults` array with `push`. It then creates an `<li>` element with the `textContent` set to the timer's `timeString`, which it `prepend`'s to the `<ol>` element.I am using `prepend` instead of `append` so that the element appears at the top of the ordered list, this ensures that the user will always receive visual feedback upon clicking the record button.
+The record button calls the `recordTimerButton()` method, it uses a reference to the timer with the use of `document.querySelector` to get the `timeString` from the `race-timer` component, which it then adds to a `raceResults` array with `push`. It then creates an `<li>` element with the `textContent` set to the timer's `timeString`, which it `prepend`'s to the `<ol>` element. I am using `prepend` instead of `append` so that the element appears at the top of the ordered list, this ensures that the user will always receive visual feedback upon clicking the record button.
 
 The submit button calls the `submitTime()` method which sends a `POST` request to the server with the `userId` attached as a query parameter as this action can only be performed by users who are organisers or marshals. The payload contains the `raceResults` and the `raceResultsTimerStartDate`. The `raceResultsTimerStartDate` is set to the timer's `startDate` so that it can be used in the `GROUP BY` when getting all the race results from the database (in the API at `/api/v1/race-results` with the `getAllRaceResults()` function), this allows for multiple marshals to record and submit race results, as they can be merged into one based upon the `raceResultsTimerStartDate`.
 
@@ -77,7 +77,7 @@ The submit button calls the `submitTime()` method which sends a `POST` request t
 
 Click the "Results" button in the nav to open the race results screen. This screen shows all the results that have been recorded and submitted my marshals or organisers on the "Record" screen. Click on an individual race result to view the first name and last name of the race result (if they have been set by a marshal or organiser, otherwise it will be empty).
 
-The race results screen gets all the race results from the database through a fetch request to the server. The server responds with all the race results, grouped by the `race_results_timer_start_date`, this allows for marshals to submit results separately and have them merged into one. It then constructs the race `<section>` elements for each race, as well as a `<li>` and `<button>` for each race result. If there are no race results, then the place holder element is shown, which states that there are no race results. All of the race result buttons in the list have an event listener for appending the `?raceResultId` parameter to the URL along with the race id.
+The race results screen gets all the race results from the database through a fetch request to the server. The server responds with all the race results, grouped by the `race_results_timer_start_date`, this allows for marshals to submit results separately and have them merged into one. It then constructs the race `<section>` elements for each race, as well as a `<li>` and `<button>` for each race result. If there are no race results, or if there was an error in fetching the race results, then the place holder element is shown. All of the race result buttons in the list have an event listener for appending the `?raceResultId` parameter to the URL along with the race id.
 
 ### Result/View a specific race result and edit the names
 
@@ -91,7 +91,7 @@ The `submitRaceResultNames()` method is used to update the first name and last n
 
 Click on any of the buttons in the nav and the pages will load without the browser refreshing.
 
-This was accomplished in the `public/index.js` file, where the content is fetched from the `public/screens` directory and then added to the html with a class that hides the element. All of the button elements used for navigation have a `dataset.screen` property which dictates the screen that it should show when clicked. The buttons have events added to them that use the `event.target.dataset.screen` to show that specific screen by removing the hidden class from that element and hiding all other screens (the event listeners are added with the `addEventListenersChangeContent()` function in `public/index.js`). Some of the buttons, such as the `Results` button in the nav have an extra event listener added to them (added to them with the `addEventListenersChangeContentRefresh()` in `public/index.js`), which refreshes the screen contents by removing the screen element and then rebuilding the content for it. Certain screens need to refresh, because the data can get updated while the user is using the application.
+This was accomplished in the `public/index.js` file, where the content is fetched from the `public/screens` directory and then added to the html with a class that hides the element. All of the button elements used for navigation have a `dataset.screen` property which dictates the screen that it should show when clicked. The buttons have events added to them that use the `event.target.dataset.screen` to show that specific screen by removing the hidden class from that element and hiding all other screens (the event listeners are added with the `addEventListenersChangeContent()` function in `public/index.js`). Some of the buttons, such as the `Results` button in the nav have an extra event listener added to them (added to them with the `addEventListenersChangeContentRefresh()` in `public/index.js`), which refreshes the screen contents by removing the screen element and then rebuilding the content for it. Certain screens need to refresh it's data from the database, because the data can get updated while the user is using the application.
 
 ### Custom Alert Prompt/Replaces the default JavaScript alert
 
@@ -104,6 +104,13 @@ The `custom-alert` `showAlert()` method returns a promise which is resolved if t
 You can install the web app on your device depending on the browser you are using in different ways, for Chrome see [here](https://support.google.com/chrome/answer/9658361?hl=en&co=GENIE.Platform%3DDesktop).
 
 Once the window loads, the service worker is registered, this is done in `public/register-sw.js`. It registers the `public/sw.js` file, which adds all the `public` files to the cache. It then intercepts any fetch requests, and if the request does not include `/api/`, then it attempts to retrieve the resource from the cache. It then updates the cache.
+
+The application will work offline with certain restrictions:
+
+- Organisers cannot start or stop the timer unless they are connected to the server, this is to set the timer start date in the database.
+- Organisers and marshals who record times, must be connected to the server to get the timer start date before going offline, otherwise they cannot record any race results.
+- Race results cannot be submitted until the user is online.
+- Race results cannot be viewed unless the user is online.
 
 ## AI
 
@@ -378,7 +385,7 @@ app.listen(port, () => {
 });
 ```
 
-The chatbot told me that `req.user` is undefined, because HTTP is stateless so `req.user` won't carry over to the next request, it then provided several solutions, however, two of them were using external libraries that we are not allowed to use. I opted for the solution that it called a "Quick fix (just for testing)", because this application does not need proper authentication as it is assumed that it would be handled by a third party. This solution involved adding `getUser` to the `checkRole` function, therefore, it required me to add the `userId` to the URL in each fetch request on the client where the route is protected (as seen with the `submitTime` function at `public/components/race-record.js` and the `submitRaceResultNames` function at `public/components/race-result.js`)
+The chatbot told me that `req.user` is undefined, because HTTP is stateless so `req.user` won't carry over to the next request, it then provided several solutions, however, two of them were using external libraries that we are not allowed to use. I opted for the solution that it called a "Quick fix (just for testing)", because this application does not need proper authentication as it is assumed that if this were to ever be properly used, the authentication would be handled by a third party. This solution involved adding `getUser` to the `checkRole` function, therefore, it required me to add the `userId` to the URL in each fetch request on the client where the route is protected (as seen with the `setTimerStartDate()`, `addRaceResults()`, and `addRaceResultNames()` functions at `public/utils.js`)
 
 ### Prompts to develop the `public/sw.js` file
 
@@ -462,6 +469,8 @@ I didn't want the fetches to the API intercepted by the service worker, because 
 ## Why and How I Have Improved My Artefact Since the Prototype Deadline
 
 While developing this application, it went through several iterations. After the Easter break, I had an app which had the `race-timer` and the `race-results` components on the same page, and then a separate page for the race results. After learning that the app requires roles, I re-structured it so that the `race-results` component is on a separate screen, as this makes it easier to selectively hide the page depending upon the role. Moreover, this allowed me to increase the size of certain elements, which is important because the app is expected to be used by older people out in cold weather.
+
+Previously I did not show errors in the UI when there were network issues, however, I refactored it by checking for network errors when fetching, and then adding errors to the UI. However, this could still be handled better by using service workers. For example, when submitting race results I am currently showing an error and not allowing the user to submit if they have network issues, however, I could have used a service worker to cache the request and then when the user goes online, the request could be sent.
 
 ## Reflects on the Development as a Whole, Including my Use of AI
 
