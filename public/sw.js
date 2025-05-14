@@ -58,8 +58,8 @@ const CACHEABLE = [
 ];
 
 async function prepareCache() {
-  const c = await caches.open(CACHE);
-  await c.addAll(CACHEABLE);
+  const cache = await caches.open(CACHE);
+  await cache.addAll(CACHEABLE);
   console.log('Cache prepared.');
 }
 
