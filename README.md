@@ -4,7 +4,8 @@
 
 <!--toc:start-->
 
-- [9.1 Key features](#91-key-features)
+- [How to Use](#how-to-use)
+- [Key features](#key-features)
   - [Role Drop Down/Select a role in the drop-down for certain permissions](#role-drop-downselect-a-role-in-the-drop-down-for-certain-permissions)
   - [Timer/Start and stop a race timer](#timerstart-and-stop-a-race-timer)
   - [Record Screen/Record runners who cross the finish line](#record-screenrecord-runners-who-cross-the-finish-line)
@@ -13,16 +14,25 @@
   - [Client-side Routing/No browser refreshing when navigating through pages](#client-side-routingno-browser-refreshing-when-navigating-through-pages)
   - [Custom Alert Prompt/Replaces the default JavaScript alert](#custom-alert-promptreplaces-the-default-javascript-alert)
   - [Progressive Web App/Install the application on your device](#progressive-web-appinstall-the-application-on-your-device)
-- [9.2 AI](#92-ai)
+- [AI](#ai)
   - [Prompts to develop the `getAllRaceResults` function at `api/v1/race-results.js`](#prompts-to-develop-the-getallraceresults-function-at-apiv1race-resultsjs)
   - [Prompts to develop the `custom-alert` component at `public/components/custom-alert.js`](#prompts-to-develop-the-custom-alert-component-at-publiccomponentscustom-alertjs)
   - [Prompts to develop all components at `public/components`](#prompts-to-develop-all-components-at-publiccomponents)
   - [Prompts to develop the `checkRole` function at `app.js`](#prompts-to-develop-the-checkrole-function-at-appjs)
-- [9.3 Discusses why and how you have improved your artefact since the prototype deadline](#93-discusses-why-and-how-you-have-improved-your-artefact-since-the-prototype-deadline)
-- [9.4 Reflects on the development as a whole, including your use of AI](#94-reflects-on-the-development-as-a-whole-including-your-use-of-ai)
+  - [Prompts to develop the `public/sw.js` file](#prompts-to-develop-the-publicswjs-file)
+- [Why and How I Have Improved My Artefact Since the Prototype Deadline](#why-and-how-i-have-improved-my-artefact-since-the-prototype-deadline)
+- [Reflects on the Development as a Whole, Including my Use of AI](#reflects-on-the-development-as-a-whole-including-my-use-of-ai)
 <!--toc:end-->
 
-## 9.1 Key features
+## How to Use
+
+1. The race organiser role must start the timer.
+2. The marshal role can then record times when runners past the finish line.
+3. The runners must then queue up in the order that they passed the finish line.
+4. After the marshal submits the times, they can open the race results screen, click on a race result and enter the first name and last name of the runners in-order.
+5. The runners can then open the app and view their race results.
+
+## Key features
 
 Key features include:
 
@@ -95,7 +105,7 @@ You can install the web app on your device depending on the browser you are usin
 
 Once the window loads, the service worker is registered, this is done in `public/register-sw.js`. It registers the `public/sw.js` file, which adds all the `public` files to the cache. It then intercepts any fetch requests, and if the request does not include `/api/`, then it attempts to retrieve the resource from the cache. It then updates the cache.
 
-## 9.2 AI
+## AI
 
 ### Prompts to develop the `getAllRaceResults` function at `api/v1/race-results.js`
 
@@ -449,11 +459,11 @@ self.addEventListener('fetch', interceptFetch);
 
 I didn't want the fetches to the API intercepted by the service worker, because I'm not storing any of that data in the cache. The chatbot provided me with an if statement to add to the `interceptFetch()` and it is what I used.
 
-## 9.3 Discusses why and how you have improved your artefact since the prototype deadline
+## Why and How I Have Improved My Artefact Since the Prototype Deadline
 
 While developing this application, it went through several iterations. After the Easter break, I had an app which had the `race-timer` and the `race-results` components on the same page, and then a separate page for the race results. After learning that the app requires roles, I re-structured it so that the `race-results` component is on a separate screen, as this makes it easier to selectively hide the page depending upon the role. Moreover, this allowed me to increase the size of certain elements, which is important because the app is expected to be used by older people out in cold weather.
 
-## 9.4 Reflects on the development as a whole, including your use of AI
+## Reflects on the Development as a Whole, Including my Use of AI
 
 Overall I believe that the development went well, however, If I had gotten a better understanding of what the coursework requirements were for the application, before coding it, I could have saved time. For example, I did not realise that the application required role selection, If I had knew that and built it with that in mind then I could have saved time as I wouldn't have needed to refactor components.
 
