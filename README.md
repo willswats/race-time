@@ -447,12 +447,16 @@ self.addEventListener('install', prepareCache);
 self.addEventListener('fetch', interceptFetch);
 ```
 
-I didn't want the fetches to the API intercepted by the service worker, because I'm not storing any of that data in the cache, it would error. The chatbot provided me with an if statement to add to the `interceptFetch()` and it is what I used.
+I didn't want the fetches to the API intercepted by the service worker, because I'm not storing any of that data in the cache. The chatbot provided me with an if statement to add to the `interceptFetch()` and it is what I used.
 
 ## 9.3 Discusses why and how you have improved your artefact since the prototype deadline
 
 While developing this application, it went through several iterations. After the Easter break, I had an app which had the `race-timer` and the `race-results` components on the same page, and then a separate page for the race results. After learning that the app requires roles, I re-structured it so that the `race-results` component is on a separate screen, as this makes it easier to selectively hide the page depending upon the role. Moreover, this allowed me to increase the size of certain elements, which is important because the app is expected to be used by older people out in cold weather.
 
 ## 9.4 Reflects on the development as a whole, including your use of AI
+
+Overall I believe that the development went well, however, If I had gotten a better understanding of what the coursework requirements were for the application, before coding it, I could have saved time. For example, I did not realise that the application required role selection, If I had knew that and built it with that in mind then I could have saved time as I wouldn't have needed to refactor components.
+
+The application could be improved by using the WebSocket API to stop the timer for other users, as currently if the organiser stops the timer, the marshals can continue recording times, as they are not getting the updated timer. This could also be accomplished by calling the `initTimer()` method every few seconds, however, this increases the load on the server, therefore, I have decided not to implement it.
 
 Using AI helped me to solve certain issues quicker, however, some times the code it provided was written poorly or did not work at all. One example of this is when it provided code dealing with `Promises`, it would commonly use the `then` keyword instead of the newer and cleaner `async` and `await` syntax, this is likely because the chatbot has been trained on older JavaScript code.
