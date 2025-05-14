@@ -94,6 +94,8 @@ export function createTimeString(startDate) {
   return timeString;
 }
 
+// fetch functions - these functions return Response.error() if the fetch fails, this
+// way I can handle network errors for them and show it in the UI, e.g. with if (response.type === 'error')
 export async function getAllRaceResults() {
   try {
     const response = await fetch('/api/v1/race-results');
