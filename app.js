@@ -85,7 +85,7 @@ function checkRole(roles) {
 }
 
 app.use('/', express.static(join(__dirname, 'public')));
-app.use('/app/*', express.static(join(__dirname, 'public/index.html')));
+app.use('/app/{*any}', express.static(join(__dirname, 'public/index.html')));
 
 app.get('/api/v1/race-result', apiGetRaceResult);
 app.patch(
@@ -111,7 +111,7 @@ app.post(
   apiUpdateTimer,
 );
 
-app.all('*', notFound);
+app.all('/{*any}', notFound);
 
 app.listen(port, () => {
   console.log(`App listening on http://localhost:${port}`);
