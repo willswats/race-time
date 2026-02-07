@@ -26,7 +26,7 @@
     }
   },
   "devDependencies": {
-    "eslint": "^8.57.1",
+    "eslint": "^10.0.0",
     "eslint-config-portsoc": "^1.0.1",
     "eslint-config-prettier": "^10.0.1"
   }
